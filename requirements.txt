@@ -1,0 +1,15 @@
+# --- 콘텐츠 생성 ---
+anthropic>=0.34.0
+
+# --- 렌더링 ---
+playwright>=1.40.0
+
+# --- 설정 ---
+PyYAML>=6.0
+
+# --- 인스타 업로드 ---
+requests>=2.31.0
+cloudinary>=1.40.0  # 이미지 호스팅 (대안: boto3 for S3)
+
+# --- 선택 ---
+python-dotenv>=1.0.0  # 직접 .env 로드해도 무방

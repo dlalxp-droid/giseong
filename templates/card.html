@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>{{TITLE}}</title>
+<style>
+  /* ===== 컬러 토큰 (지시서 1-1 고정) ===== */
+  :root {
+    --navy:  #0A1628;
+    --cream: #F5F1E8;
+    --gold:  #C8A14B;
+    --red:   #B8321A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1080px;
+    height: 1080px;
+    font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--cream);
+  }
+
+  .card {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    padding: 80px;
+    overflow: hidden;
+  }
+
+  /* ===== 카드 타입별 배경 ===== */
+  .card.cover    { background: var(--navy); color: var(--cream); }
+  .card.problem  { background: var(--cream); color: var(--navy); }
+  .card.mistake  { background: var(--cream); color: var(--navy); }
+  .card.before   { background: var(--cream); color: var(--navy); }
+  .card.after    { background: var(--navy); color: var(--cream); }
+  .card.theory   { background: var(--cream); color: var(--navy); }
+  .card.summary  { background: var(--navy); color: var(--cream); }
+  .card.cta      { background: var(--cream); color: var(--navy); }
+
+  /* ===== 상단 라벨 ===== */
+  .top-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 28px;
+    border: 2px solid currentColor;
+    border-radius: 999px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 56px;
+  }
+
+  .top-label .num {
+    font-size: 22px;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .card.cover .top-label,
+  .card.after .top-label,
+  .card.summary .top-label {
+    border-color: var(--cream);
+  }
+
+  /* ===== 메인 카피 영역 ===== */
+  .main {
+    position: absolute;
+    top: 220px;
+    left: 80px;
+    right: 80px;
+    bottom: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .headline {
+    font-size: 84px;
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+    word-break: keep-all;
+  }
+
+  .headline .accent {
+    color: var(--red);
+  }
+
+  .card.cover .headline .accent,
+  .card.after .headline .accent,
+  .card.summary .headline .accent {
+    color: var(--gold);
+  }
+
+  .subhead {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.5;
+    opacity: 0.85;
+    word-break: keep-all;
+    margin-bottom: 28px;
+  }
+
+  /* ===== Before / After 박스 ===== */
+  .quote-box {
+    padding: 36px 40px;
+    border-radius: 16px;
+    margin-top: 24px;
+    font-size: 36px;
+    line-height: 1.5;
+    font-weight: 500;
+    word-break: keep-all;
+  }
+
+  .quote-box.bad {
+    background: rgba(184, 50, 26, 0.08);
+    border-left: 6px solid var(--red);
+    color: var(--navy);
+  }
+
+  .quote-box.good {
+    background: rgba(200, 161, 75, 0.15);
+    border-left: 6px solid var(--gold);
+    color: var(--cream);
+  }
+
+  .quote-box.good .accent {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .quote-box.bad .accent {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .card.before .quote-box.bad { background: rgba(184, 50, 26, 0.08); }
+  .card.after .quote-box.good { background: rgba(200, 161, 75, 0.18); }
+
+  .quote-box .label {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    opacity: 0.7;
+  }
+
+  /* ===== 이론 카드 ===== */
+  .theory-author {
+    display: inline-block;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--gold);
+  }
+
+  .theory-quote {
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 28px;
+    word-break: keep-all;
+  }
+
+  .theory-explain {
+    font-size: 28px;
+    line-height: 1.6;
+    opacity: 0.85;
+    word-break: keep-all;
+  }
+
+  /* ===== 하단 고정 영역 (지시서 1-1 핵심) ===== */
+  .bottom-stack {
+    position: absolute;
+    bottom: 74px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .page-indicator .current { color: var(--gold); font-size: 28px; }
+  .page-indicator .total   { opacity: 0.6; }
+
+  .signoff {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .signoff .brand {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .signoff .swipe {
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== 장식 요소 ===== */
+  .decor-line {
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    width: 80px;
+    height: 4px;
+    background: var(--gold);
+  }
+
+  .corner-quote {
+    position: absolute;
+    top: 200px;
+    right: 80px;
+    font-size: 180px;
+    line-height: 1;
+    font-family: Georgia, serif;
+    color: var(--gold);
+    opacity: 0.18;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="card {{CARD_TYPE}}">
+    <div class="decor-line"></div>
+
+    {{TOP_LABEL_BLOCK}}
+    {{CORNER_QUOTE_BLOCK}}
+
+    <div class="main">
+      {{MAIN_CONTENT}}
+    </div>
+
+    <div class="bottom-stack">
+      <div class="page-indicator">
+        <span class="current">{{PAGE_NUM}}</span>
+        <span class="total">/ {{TOTAL_PAGES}}</span>
+      </div>
+      <div class="signoff">
+        <span class="brand">{{BRAND}}</span>
+        <span class="swipe">{{SWIPE_TEXT}}</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

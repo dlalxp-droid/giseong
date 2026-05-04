@@ -1,0 +1,76 @@
+# ============================================
+# 카드뉴스 자동화 시스템 설정
+# ============================================
+
+# ----- 디자인 (지시서 1-1 고정) -----
+design:
+  width: 1080
+  height: 1080
+  cards_per_set: 8
+  colors:
+    navy:  "#0A1628"
+    cream: "#F5F1E8"
+    gold:  "#C8A14B"
+    red:   "#B8321A"
+
+# ----- 콘텐츠 -----
+content:
+  topic: "보험 상담 화법"
+  target: "보험설계사"
+  excluded_topics:
+    - "보험금 청구"
+    - "보상 분쟁"
+    - "심사 분쟁"
+    - "약관 해석"
+    - "의료자문"
+  tone: "현장 설계사가 즉시 따라할 수 있는 실전 멘트 중심"
+  structure:
+    - "문제 상황"
+    - "흔한 실수 멘트"
+    - "권장 화법 Before"
+    - "권장 화법 After"
+    - "심리학 근거 (카네기/아들러/치알디니 등)"
+    - "한 줄 요약"
+
+# ----- 사인오프 (지시서 1-1: GA명 표기 금지) -----
+branding:
+  sign_off: "@your_brand_name"   # 본인 명의 또는 개인 브랜드명으로 변경
+  swipe_cta: "다음 ➜"
+
+# ----- 슬롯 (자동 업로드 시간) -----
+slots:
+  AM: "08:30"
+  PM: "18:00"
+
+# ----- LLM (콘텐츠 생성) -----
+llm:
+  provider: "anthropic"
+  model: "claude-sonnet-4-20250514"
+  max_tokens: 4000
+  temperature: 0.7
+
+# ----- Playwright 렌더링 -----
+render:
+  scale: 1
+  format: "png"
+  wait_for: "networkidle"
+  timeout_ms: 30000
+
+# ----- 출력 경로 -----
+paths:
+  template: "templates/card.html"
+  output_root: "output"
+  captions_root: "captions"
+  input_root: "input"
+
+# ----- 인스타 업로드 -----
+instagram:
+  api_version: "v21.0"
+  carousel_size: 8       # cards_per_set 와 동일하게 유지
+  retry_max: 3
+  retry_delay_sec: 30
+
+# ----- 실패 알림 (선택) -----
+notify:
+  enabled: false
+  webhook_url: ""        # 슬랙/디스코드 웹훅 URL
