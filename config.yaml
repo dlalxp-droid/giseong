@@ -70,6 +70,19 @@ instagram:
   retry_max: 3
   retry_delay_sec: 30
 
+# ----- 네이버 밴드 업로드 -----
+band:
+  # 기본 모드: web (Playwright로 사진 직접 첨부)
+  #           api (Open API: 본문 + 이미지 URL 링크 게시)
+  default_mode: "web"
+  # api 모드 옵션
+  do_push: false         # Y/N — 밴드 멤버에게 푸시 알림
+  # 재시도
+  retry_max: 3
+  retry_delay_sec: 30
+  # web 모드: 셀렉터 오버라이드 (밴드 UI 변경 시 조정)
+  web_selectors_override: {}
+
 # ----- 실패 알림 (선택) -----
 notify:
   enabled: false
