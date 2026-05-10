@@ -1,7 +1,8 @@
 # 보험 상담 화법 카드뉴스 자동화 시스템
 
 인스타그램 피드용 카드뉴스(1080x1080, 8장/세트)를 Claude API로 자동 생성하고,
-지정된 시간(매일 08:30 / 18:00)에 Meta Graph API로 자동 업로드하는 시스템.
+지정된 시간(매일 08:30 / 18:00)에 **인스타그램(Meta Graph API) + 네이버 밴드** 양쪽으로
+자동 업로드하는 시스템.
 
 타겟: 보험설계사. 콘텐츠: 보험 상담 화법 (보상 관련 주제는 자동 회피).
 
@@ -10,10 +11,11 @@
 ## 1. 디렉토리 구조
 
 ```
-cardnews-system/
+.
 ├── generate.py              # 카드뉴스 일괄 생성 진입점
 ├── scheduler.py             # 인스타 업로드 진입점 (cron)
-├── config.yaml              # 디자인/콘텐츠/슬롯 설정
+├── band_scheduler.py        # 네이버 밴드 업로드 진입점 (cron)
+├── config.yaml              # 디자인/콘텐츠/슬롯/플랫폼 설정
 ├── .env.example             # 환경변수 템플릿
 ├── requirements.txt
 ├── templates/
@@ -22,17 +24,15 @@ cardnews-system/
 │   ├── content_generator.py # Claude API 호출 → 8장 분량 JSON
 │   ├── renderer.py          # HTML → Playwright → PNG
 │   ├── image_host.py        # Cloudinary 업로드 (Meta는 public URL 요구)
-│   └── ig_uploader.py       # Meta Graph API 캐러셀 게시
+│   ├── ig_uploader.py       # Meta Graph API 캐러셀 게시
+│   ├── band_uploader.py     # 네이버 밴드 게시 (api / web 모드)
+│   └── band_auth.py         # 네이버 밴드 OAuth2 헬퍼
 ├── input/                   # 사용자 자료 (PDF 등) drop
-├── output/                  # 생성물
-│   └── 2026-05-04/
-│       ├── AM/
-│       │   ├── draft/       # 자동 생성 직후
-│       │   ├── approved/    # 검수 완료 후 사람이 이동 → 업로드 큐 진입
-│       │   └── _meta.json   # 재렌더용
-│       └── PM/...
+├── output/                  # 생성물 (draft → approved 게이트)
 ├── captions/                # YYYY-MM-DD_AM.txt, _PM.txt
-└── logs/                    # 게시 결과 JSON 로그
+└── logs/
+    ├── YYYY-MM-DD_SLOT.json # 인스타 업로드 결과
+    └── band/                # 밴드 업로드 결과
 ```
 
 ---
@@ -40,113 +40,177 @@ cardnews-system/
 ## 2. 설치
 
 ```bash
-# 가상환경
 python -m venv .venv
 source .venv/bin/activate
-
-# 의존성
 pip install -r requirements.txt
-
-# Playwright Chromium (최초 1회)
 python -m playwright install chromium
 
-# 환경변수
 cp .env.example .env
 # .env 파일을 열어 토큰/키 채우기
 ```
 
 ---
 
-## 3. Meta Graph API 토큰 발급 (수동, 1회)
+## 3. Meta Graph API 토큰 발급 (인스타용)
 
-지시서 2-1번에 해당. 핵심만 정리.
+지시서 2-1번 참고. 핵심만:
 
-1. **인스타그램 프로페셔널 계정**으로 전환 (개인 계정은 API 사용 불가)
-2. **페이스북 페이지** 생성 후 인스타와 연동
-3. [Meta for Developers](https://developers.facebook.com) → 앱 생성 → 유형 "비즈니스"
-4. 제품 추가: **Instagram Graph API**
-5. 권한 추가:
-   - `instagram_basic`
-   - `instagram_content_publish`
-   - `pages_show_list`
-   - `pages_read_engagement`
-6. **그래프 API 탐색기**에서 단기 토큰 발급 후 → **장기 토큰**(60일)으로 교환
-7. `.env`에 저장:
+1. 인스타그램 **프로페셔널** 계정 + 페이스북 페이지 연동
+2. https://developers.facebook.com → 앱 생성 → "비즈니스"
+3. 제품: Instagram Graph API
+4. 권한: `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`
+5. 단기 토큰 → 장기 토큰(60일)으로 교환
+6. `.env`:
    ```
    META_ACCESS_TOKEN=EAAxxxxxxx...
-   IG_USER_ID=17841400000000000   # GET /me/accounts → instagram_business_account.id
+   IG_USER_ID=17841400000000000
    ```
-8. **앱 검수** 완료 후 운영 모드 전환 (개발 모드는 본인 계정에만 게시 가능)
-
-> 토큰 만료: 60일마다 갱신 필요. 만료 1주일 전 슬랙 알림을 받도록 별도 cron 권장.
 
 ---
 
-## 4. 이미지 호스팅 세팅 (Cloudinary)
+## 4. 이미지 호스팅 (Cloudinary)
 
 Meta API는 **public URL** 만 받기 때문에 PNG를 외부에 올려야 함.
-Cloudinary 무료 티어(월 25GB)면 충분.
+밴드 `api` 모드도 같은 호스팅을 재사용.
 
 1. https://cloudinary.com/users/register/free
-2. Dashboard에서 cloud name / API key / API secret 복사
-3. `.env`:
-   ```
-   CLOUDINARY_CLOUD_NAME=your_name
-   CLOUDINARY_API_KEY=...
-   CLOUDINARY_API_SECRET=...
-   ```
+2. `.env` 에 `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 
 ---
 
-## 5. 일일 운영 흐름
+## 5. 네이버 밴드 자동 업로드
 
-### 5-1. 일주일치 일괄 생성
+밴드 Open API는 **글 작성**만 공식 지원하고 **사진 첨부 업로드 엔드포인트가 없다**.
+따라서 두 가지 모드를 함께 제공한다:
+
+| 모드 | 방식 | 결과 | 추천 상황 |
+|---|---|---|---|
+| `api` | Open API `/v2.2/band/post/create` | 본문 + 이미지 URL 링크 (썸네일 미리보기) | 안정적이지만 카드뉴스 8장 첨부 형태 아님. 빠른 알림용 |
+| `web` | Playwright + 저장된 로그인 세션 | 사진 8장 직접 첨부 (실제 카드뉴스 형태) | **운영 권장** |
+
+### 5-1. Open API 앱 등록 (api 모드)
+
+1. https://developers.band.us → "Create New App"
+2. 앱 등록 후 **Client ID / Client Secret / Redirect URI** 확보
+3. 권한 스코프: `READ_BAND`, `READ_POST`, `WRITE_POST`
+4. **최초 1회 동의 화면**:
+   ```bash
+   export BAND_CLIENT_ID=...
+   export BAND_CLIENT_SECRET=...
+   export BAND_REDIRECT_URI=http://localhost/band_oauth_cb
+   python scripts/band_auth.py authorize-url
+   # 출력 URL을 브라우저로 열어 동의 → redirect_uri?code=XXX 의 code 복사
+   python scripts/band_auth.py exchange --code XXX
+   # → access_token / refresh_token 출력
+   ```
+5. `.env` 에 저장:
+   ```
+   BAND_CLIENT_ID=...
+   BAND_CLIENT_SECRET=...
+   BAND_REDIRECT_URI=...
+   BAND_ACCESS_TOKEN=ZQAA...
+   BAND_REFRESH_TOKEN=ZQAA...
+   ```
+6. 게시 대상 밴드 키 조회:
+   ```bash
+   python scripts/band_auth.py bands
+   # AABbbbbb...   내 보험상담 밴드
+   ```
+   `BAND_KEY=AABbbbbb...` 를 `.env` 에 추가.
+7. 토큰 만료 시:
+   ```bash
+   python scripts/band_auth.py refresh
+   ```
+
+### 5-2. 웹 자동 로그인 세션 만들기 (web 모드)
+
+밴드 본인 인증은 캡차/2단계가 있어 헤드리스 자동 로그인은 권장하지 않는다.
+대신 **로컬에서 한 번 로그인한 세션을 storage_state.json 으로 저장**해서 재사용한다.
+
+```bash
+python - <<'PY'
+from playwright.sync_api import sync_playwright
+with sync_playwright() as pw:
+    b = pw.chromium.launch(headless=False)
+    ctx = b.new_context(locale="ko-KR")
+    page = ctx.new_page()
+    page.goto("https://auth.band.us/login_page")
+    input("브라우저에서 로그인 완료 후 Enter…")
+    ctx.storage_state(path="band_storage_state.json")
+    b.close()
+PY
+```
+
+`.env`:
+```
+BAND_ID=12345678                       # https://band.us/band/<여기>
+BAND_STORAGE_STATE=./band_storage_state.json
+```
+
+> 세션 만료(보통 수주 ~ 수개월): 위 스크립트로 다시 만들면 됨.
+
+### 5-3. 즉시 게시 테스트
+
+```bash
+# 자료 점검만 (실제 게시 X)
+python band_scheduler.py --slot AM --dry-run
+
+# api 모드 — 본문 + URL 게시
+python band_scheduler.py --slot AM --mode api --push
+
+# web 모드 — 사진 8장 첨부 게시
+python band_scheduler.py --slot AM --mode web
+```
+
+### 5-4. cron 등록
+
+```cron
+# 인스타 + 밴드 동시 게시
+30 8  * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot AM
+30 8  * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot AM --mode web
+0  18 * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot PM
+0  18 * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot PM --mode web
+```
+
+### 5-5. GitHub Actions
+
+`.github/workflows/upload-band.yml` 에 정기 워크플로우 포함.
+저장소 secrets:
+- 공통: `NOTIFY_WEBHOOK_URL`
+- api: `BAND_CLIENT_ID`, `BAND_CLIENT_SECRET`, `BAND_REFRESH_TOKEN`, `BAND_KEY`,
+  `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- web: `BAND_ID`, `BAND_STORAGE_STATE_JSON` (로컬에서 만든 storage_state.json
+  파일 **내용** 전체를 secret value 로 붙여넣음)
+
+---
+
+## 6. 일일 운영 흐름
+
+### 6-1. 일주일치 일괄 생성
 
 ```bash
 python generate.py --days 7 --slots AM,PM
-# → output/2026-05-04/AM/draft/card_01.png ~ card_08.png (× 14세트)
-# → captions/2026-05-04_AM.txt
 ```
 
-세부 주제는 `SUBTOPIC_POOL`(generate.py)에서 자동 회전. 직접 지정도 가능:
-
-```bash
-python generate.py --date 2026-05-05 --slot AM --topic "거절 처리 화법"
-```
-
-### 5-2. 검수 후 approved 이동
-
-draft/ 폴더의 PNG 8장과 캡션을 확인한 뒤,
-**문제없으면 approved/ 폴더로 옮긴다**:
+### 6-2. 검수 → approved 이동
 
 ```bash
 mv output/2026-05-04/AM/draft/*.png output/2026-05-04/AM/approved/
 ```
 
-> 운영 정책 (지시서 6번): approved 에 들어간 것만 자동 업로드 큐 대상.
-> draft 그대로 발행하려면 `scheduler.py --allow-draft` 옵션 (비권장).
+> approved/ 에 들어간 것만 자동 업로드 큐 대상 (지시서 6번).
 
-### 5-3. cron 등록
-
-```cron
-# crontab -e
-30 8  * * *  cd /path/to/cardnews-system && /path/to/.venv/bin/python scheduler.py --slot AM
-0  18 * * *  cd /path/to/cardnews-system && /path/to/.venv/bin/python scheduler.py --slot PM
-```
-
-### 5-4. 즉시 테스트
+### 6-3. 즉시 테스트
 
 ```bash
-# API 호출 없이 더미 데이터로 1세트 생성 (개발용)
 python generate.py --preview --stub
-
-# Cloudinary/Meta 호출 없이 자료만 점검
-python scheduler.py --slot AM --dry-run
+python scheduler.py      --slot AM --dry-run
+python band_scheduler.py --slot AM --dry-run
 ```
 
 ---
 
-## 6. 카드 구조 (지시서 1-2)
+## 7. 카드 구조 (지시서 1-2)
 
 ```
 01 cover    표지 (강한 후킹)
@@ -167,31 +231,34 @@ python scheduler.py --slot AM --dry-run
 
 ---
 
-## 7. 자주 보는 에러
+## 8. 자주 보는 에러
 
 | 에러 | 원인 / 해결 |
 |---|---|
-| `Container ... not ready in 60s` | 이미지 URL이 public 아님 / 호스팅 지연. URL 직접 브라우저 접속 확인 |
+| `Container ... not ready in 60s` | 이미지 URL public 아님 / 호스팅 지연 |
 | `(#10) Application does not have permission` | Meta 앱 검수 미완료 또는 권한 누락 |
-| `Image must be a JPEG` | Meta는 PNG도 받지만 일부 환경에서 JPEG 강제. renderer에서 출력 포맷 변경 |
-| `Carousel must have 2~10 items` | PNG 개수 불일치. cards_per_set 재확인 |
-| 토큰 만료 | 장기 토큰도 60일 만료. Graph API Explorer에서 재발급 |
+| `Carousel must have 2~10 items` | PNG 개수 불일치 |
+| 토큰 만료 (Meta) | 60일 만료. Graph API Explorer 재발급 |
+| `Band API error: ... 'result_code': N` | Band 에러 코드 표 참조 (1=정상). 토큰 만료시 `band_auth.py refresh` |
+| Band web 모드 selector 실패 | 밴드 UI 개편. `config.yaml` `band.web_selectors_override` 로 덮어쓰기 |
+| `BAND_STORAGE_STATE` 없음 | 5-2 절차로 storage_state.json 생성 후 경로 지정 |
 
 ---
 
-## 8. 안전장치
+## 9. 안전장치
 
-- **보상 주제 자동 회피**: system prompt에서 차단
-- **draft → approved 수동 게이트**: 사람이 본 것만 게시
-- **재시도 3회**: 네트워크 일시 장애 대응
-- **로그 파일**: `logs/YYYY-MM-DD_SLOT.json` 에 게시 결과 기록
-- **알림 웹훅**(선택): 실패 시 슬랙/디스코드로 즉시 통보
+- 보상 주제 자동 회피 (system prompt 차단)
+- draft → approved 수동 게이트 (사람이 본 것만 게시)
+- 재시도 3회 (네트워크 일시 장애 대응)
+- 플랫폼별 분리 로그: `logs/*.json` (인스타) / `logs/band/*.json` (밴드)
+- 알림 웹훅(선택): 실패 시 슬랙/디스코드로 통보
 
 ---
 
-## 9. 다음 확장 (TODO)
+## 10. 다음 확장 (TODO)
 
-- [ ] PDF/Google Drive 자료를 input/ 에 두면 콘텐츠 생성 시 우선 반영
-- [ ] 일주일 커버리지 대시보드 (어떤 주제 다뤘는지 시각화)
-- [ ] 폰트 임베드 (Pretendard) 로컬 설치 - 현재는 시스템 폰트 fallback
-- [ ] Reels 분리 발행(media_type=REELS, share_to_feed=false) 모듈
+- [ ] PDF/Google Drive 자료 입력 반영
+- [ ] 주간 주제 커버리지 대시보드
+- [ ] Pretendard 폰트 임베드
+- [ ] Reels 분리 발행 (media_type=REELS)
+- [ ] 카카오톡 채널 / 네이버 카페 어댑터 추가
