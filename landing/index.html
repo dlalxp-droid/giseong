@@ -1,462 +1,1315 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0b2a5b" />
-<title>전준희 보험설계사 | 든든한 보장 설계 파트너</title>
-<meta name="description" content="고객 한 분 한 분의 라이프스타일에 꼭 맞는 보장을 설계해 드립니다. 무료 보험 상담을 신청해 보세요." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>보험점검 - 받을 수 있는 보험인지, 지금 확인하세요</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <style>
-  :root{
-    --primary:#0b2a5b;
-    --primary-2:#1746a2;
-    --accent:#f7c948;
-    --bg:#f5f7fb;
-    --card:#ffffff;
-    --text:#1b1f2a;
-    --muted:#5b6470;
-    --line:#e5e8ef;
-    --kakao:#fee500;
-    --kakao-ink:#191600;
-    --tel:#27c466;
-    --shadow:0 12px 32px rgba(15,32,72,.10);
-    --radius:18px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,-apple-system,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    line-height:1.6;
-    padding-bottom:88px;
-  }
-  img{max-width:100%;display:block}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:560px;margin:0 auto;background:var(--bg)}
+:root {
+  --bg: #0A0A0B;
+  --bg-card: #141416;
+  --bg-elevated: #1A1A1E;
+  --bg-hover: #222228;
+  --surface: #FAFAFA;
+  --text-primary: #F5F5F7;
+  --text-secondary: rgba(245,245,247,0.7);
+  --text-tertiary: rgba(245,245,247,0.5);
+  --accent: #6C5CE7;
+  --accent-light: rgba(108,92,231,0.12);
+  --accent-glow: rgba(108,92,231,0.25);
+  --warm: #FF6B4A;
+  --warm-light: rgba(255,107,74,0.1);
+  --success: #34D399;
+  --success-light: rgba(52,211,153,0.1);
+  --border: rgba(255,255,255,0.1);
+  --border-hover: rgba(255,255,255,0.18);
+  --gradient-1: linear-gradient(135deg, #6C5CE7 0%, #A855F7 100%);
+  --gradient-2: linear-gradient(135deg, #FF6B4A 0%, #FF9A76 100%);
+  --gradient-3: linear-gradient(135deg, #34D399 0%, #6EE7B7 100%);
+}
 
-  /* Top bar */
-  .topbar{
-    position:sticky;top:0;z-index:30;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 18px;background:rgba(255,255,255,.92);
-    backdrop-filter:saturate(180%) blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .brand{font-weight:900;color:var(--primary);letter-spacing:-.02em}
-  .brand small{font-weight:500;color:var(--muted);margin-left:6px}
-  .topbar .call{
-    font-size:13px;font-weight:700;color:#fff;background:var(--primary);
-    padding:8px 12px;border-radius:999px;
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Hero */
-  .hero{
-    position:relative;color:#fff;padding:36px 22px 28px;
-    background:
-      radial-gradient(120% 80% at 0% 0%, rgba(247,201,72,.25), transparent 60%),
-      radial-gradient(120% 80% at 100% 100%, rgba(23,70,162,.6), transparent 60%),
-      linear-gradient(160deg,#0b2a5b 0%, #143a85 60%, #1746a2 100%);
-    overflow:hidden;
-  }
-  .hero::before{
-    content:"";position:absolute;inset:auto -40px -60px auto;
-    width:240px;height:240px;border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 60%);
-  }
-  .badge{
-    display:inline-block;font-size:12px;font-weight:700;
-    color:var(--accent);background:rgba(247,201,72,.12);
-    border:1px solid rgba(247,201,72,.45);
-    padding:6px 12px;border-radius:999px;letter-spacing:.02em;
-  }
-  .hero h1{
-    margin:14px 0 8px;font-size:28px;line-height:1.3;
-    letter-spacing:-.03em;font-weight:900;
-  }
-  .hero h1 b{color:var(--accent)}
-  .hero p{margin:0;color:#d9e2f4;font-size:15px}
-  .profile{
-    margin-top:22px;display:flex;align-items:center;gap:14px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.14);
-    padding:14px;border-radius:16px;
-  }
-  .avatar{
-    width:64px;height:64px;border-radius:50%;
-    background:linear-gradient(135deg,#f7c948,#ffe9a3);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--primary);font-weight:900;font-size:22px;
-    box-shadow:0 4px 14px rgba(0,0,0,.25);
-    flex:0 0 64px;
-  }
-  .who{font-size:14px;color:#cfd8ee}
-  .who strong{display:block;color:#fff;font-size:17px;margin-bottom:2px}
-  .cta-row{display:flex;gap:10px;margin-top:22px}
-  .btn{
-    flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:14px 16px;border-radius:14px;font-weight:800;font-size:15px;
-    border:0;cursor:pointer;letter-spacing:-.01em;
-  }
-  .btn-kakao{background:var(--kakao);color:var(--kakao-ink)}
-  .btn-tel{background:var(--tel);color:#fff}
-  .btn-ghost{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.25)}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
 
-  /* Section */
-  section{padding:34px 22px}
-  .eyebrow{
-    color:var(--primary-2);font-weight:800;font-size:12px;
-    letter-spacing:.18em;text-transform:uppercase;
-  }
-  h2{
-    margin:6px 0 18px;font-size:22px;line-height:1.35;
-    letter-spacing:-.03em;font-weight:900;color:var(--primary);
-  }
-  h2 b{color:var(--primary-2)}
-  .lead{color:var(--muted);font-size:15px;margin:0 0 8px}
+body, .lp-wrap {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  position: relative;
+}
 
-  /* Stats */
-  .stats{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
-    background:var(--card);border-radius:var(--radius);padding:18px;
-    box-shadow:var(--shadow);margin-top:-24px;position:relative;z-index:2;
-  }
-  .stat{text-align:center}
-  .stat .n{
-    font-size:22px;font-weight:900;color:var(--primary);letter-spacing:-.02em;
-  }
-  .stat .n small{font-size:12px;color:var(--muted);font-weight:600;margin-left:2px}
-  .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
 
-  /* Service cards */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .card{
-    background:var(--card);border-radius:var(--radius);
-    padding:18px 16px;box-shadow:var(--shadow);
-    border:1px solid var(--line);
-  }
-  .card .ico{
-    width:42px;height:42px;border-radius:12px;display:flex;
-    align-items:center;justify-content:center;font-size:22px;
-    background:linear-gradient(135deg,#eaf0ff,#f6f9ff);
-    color:var(--primary);margin-bottom:10px;
-  }
-  .card h3{margin:0 0 4px;font-size:15px;letter-spacing:-.02em}
-  .card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 28px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
 
-  /* Why list */
-  .why{background:#fff;border-radius:var(--radius);padding:6px 8px;box-shadow:var(--shadow)}
-  .why li{
-    list-style:none;display:flex;gap:14px;align-items:flex-start;
-    padding:16px 14px;border-bottom:1px solid var(--line);
-  }
-  .why li:last-child{border-bottom:0}
-  .why .num{
-    flex:0 0 32px;height:32px;border-radius:10px;
-    background:var(--primary);color:#fff;font-weight:800;
-    display:flex;align-items:center;justify-content:center;font-size:14px;
-  }
-  .why h4{margin:0 0 2px;font-size:15px;letter-spacing:-.02em}
-  .why p{margin:0;font-size:13px;color:var(--muted)}
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+  animation: orbFloat 12s ease-in-out infinite;
+}
 
-  /* Reviews */
-  .reviews{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
-  .reviews::-webkit-scrollbar{display:none}
-  .review{
-    flex:0 0 84%;scroll-snap-align:start;
-    background:#fff;border-radius:var(--radius);
-    padding:18px;box-shadow:var(--shadow);border:1px solid var(--line);
-  }
-  .stars{color:#f5a623;letter-spacing:2px;font-size:14px;margin-bottom:6px}
-  .review p{margin:0 0 10px;font-size:14px;color:#2a2f3a}
-  .review .who2{font-size:12px;color:var(--muted)}
+.hero-orb-1 {
+  width: 280px; height: 280px;
+  background: rgba(108,92,231,0.15);
+  top: 10%; right: -20%;
+}
 
-  /* Form */
-  .form{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-  .form label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px;font-weight:600}
-  .form input,.form select,.form textarea{
-    width:100%;padding:13px 14px;border:1px solid var(--line);
-    border-radius:12px;font:inherit;background:#fafbfd;color:var(--text);
-  }
-  .form textarea{min-height:90px;resize:vertical}
-  .form .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .check{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);margin-top:14px}
-  .check input{width:auto;margin-top:3px}
-  .submit{
-    margin-top:14px;width:100%;padding:15px;border:0;border-radius:14px;
-    background:linear-gradient(135deg,var(--primary),var(--primary-2));
-    color:#fff;font-weight:800;font-size:16px;letter-spacing:-.01em;cursor:pointer;
-    box-shadow:0 10px 24px rgba(11,42,91,.30);
-  }
+.hero-orb-2 {
+  width: 200px; height: 200px;
+  background: rgba(255,107,74,0.08);
+  bottom: 15%; left: -15%;
+  animation-delay: -4s;
+}
 
-  /* FAQ */
-  details{
-    background:#fff;border-radius:14px;padding:14px 16px;
-    box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:10px;
-  }
-  details summary{
-    list-style:none;cursor:pointer;font-weight:700;font-size:15px;
-    display:flex;justify-content:space-between;align-items:center;letter-spacing:-.02em;
-  }
-  details summary::-webkit-details-marker{display:none}
-  details summary::after{content:"+";color:var(--primary-2);font-weight:900;font-size:20px}
-  details[open] summary::after{content:"−"}
-  details p{margin:10px 0 0;font-size:14px;color:var(--muted);line-height:1.7}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
+}
 
-  /* Footer */
-  footer{
-    padding:30px 22px 24px;text-align:center;color:var(--muted);font-size:12px;
-  }
-  footer .logo{font-weight:900;color:var(--primary);margin-bottom:8px}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.2);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 12px;
+  color: #A78BFA;
+  font-weight: 600;
+  margin-bottom: 32px;
+  width: fit-content;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(10px);
+  opacity: 0; transform: translateY(20px);
+  animation: revealUp 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
 
-  /* Floating bottom bar */
-  .floatbar{
-    position:fixed;left:0;right:0;bottom:0;z-index:40;
-    max-width:560px;margin:0 auto;display:flex;gap:8px;padding:10px 12px;
-    background:rgba(255,255,255,.95);border-top:1px solid var(--line);
-    backdrop-filter:blur(8px);
-  }
-  .floatbar a{
-    flex:1;text-align:center;font-weight:800;font-size:14px;
-    padding:13px 8px;border-radius:12px;
-  }
-  .fb-call{background:var(--tel);color:#fff}
-  .fb-kakao{background:var(--kakao);color:var(--kakao-ink)}
-  .fb-form{background:var(--primary);color:#fff}
+.hero-badge .pulse {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: relative;
+}
 
-  @media (min-width:600px){
-    body{padding-bottom:0}
-    .floatbar{position:static;border:0;background:transparent;padding:0;margin-top:18px}
-  }
+.hero-badge .pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.04em;
+}
+
+.hero h1 .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.hero h1 .line:nth-child(1) { animation-delay: 0.3s; }
+.hero h1 .line:nth-child(2) { animation-delay: 0.4s; }
+.hero h1 .line:nth-child(3) { animation-delay: 0.5s; }
+.hero h1 .line:nth-child(4) { animation-delay: 0.6s; }
+
+.hero h1 .grad {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  opacity: 0; transform: translateY(30px);
+  animation: revealUp 0.8s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  position: relative; z-index: 1;
+}
+
+.hero-cta-wrap {
+  margin-top: 40px;
+  opacity: 0; transform: translateY(30px);
+  animation: revealUp 0.8s 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+  position: relative; z-index: 1;
+}
+
+.btn-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--gradient-1);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: -0.02em;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
+}
+
+.btn-hero:active { transform: scale(0.97); }
+
+.btn-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: sheen 4s 1.5s infinite;
+}
+
+@keyframes sheen {
+  0% { transform: translateX(-100%); }
+  20% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.btn-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+@keyframes revealUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ===== EXPERT ===== */
+.expert {
+  padding: 48px 28px 56px;
+  position: relative;
+}
+
+.expert-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--warm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.expert h2 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.expert .sub-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.expert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.expert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+
+.expert-item:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.expert-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expert-icon.ic-claim { background: var(--accent-light); }
+.expert-icon.ic-dispute { background: var(--warm-light); }
+.expert-icon.ic-pro { background: var(--success-light); }
+.expert-icon.ic-media { background: rgba(168,85,247,0.1); }
+
+.expert-item strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 5px;
+  color: var(--text-primary);
+}
+
+.expert-item p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-tertiary);
+}
+
+.expert-bottom {
+  margin-top: 28px;
+  padding: 22px 20px;
+  background: linear-gradient(135deg, rgba(108,92,231,0.08) 0%, rgba(255,107,74,0.06) 100%);
+  border: 1px solid rgba(108,92,231,0.15);
+  border-radius: 16px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  letter-spacing: -0.02em;
+}
+
+.expert-bottom span {
+  color: #A78BFA;
+  font-weight: 700;
+}
+
+/* ===== SECTION COMMON ===== */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.section-label::before {
+  content: '';
+  width: 16px; height: 1.5px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ===== PROBLEM ===== */
+.problem {
+  padding: 80px 24px;
+  background: var(--bg);
+}
+
+.problem h2 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+
+.problem h2 .em {
+  background: var(--gradient-2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.problem > .sub-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+}
+
+.stat-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 24px 22px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: border-color 0.4s, transform 0.4s;
+}
+
+.stat-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.anim .stat-card {
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim .stat-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stat-card:nth-child(1)::before { background: radial-gradient(ellipse at 80% 20%, rgba(255,107,74,0.15) 0%, transparent 60%); }
+.stat-card:nth-child(2)::before { background: radial-gradient(ellipse at 80% 20%, rgba(108,92,231,0.15) 0%, transparent 60%); }
+.stat-card:nth-child(3)::before { background: radial-gradient(ellipse at 80% 20%, rgba(52,211,153,0.15) 0%, transparent 60%); }
+
+.stat-card.counted::before {
+  opacity: 1;
+  animation: flashGlow 1.2s ease-out;
+}
+
+@keyframes flashGlow {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.stat-card:nth-child(1)::after { background: rgba(255,107,74,0.12); }
+.stat-card:nth-child(2)::after { background: rgba(108,92,231,0.12); }
+.stat-card:nth-child(3)::after { background: rgba(52,211,153,0.12); }
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card .icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-card:nth-child(1) .icon { background: var(--warm-light); }
+.stat-card:nth-child(2) .icon { background: var(--accent-light); }
+.stat-card:nth-child(3) .icon { background: var(--success-light); }
+
+.stat-number {
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card:nth-child(1) .stat-number { color: var(--warm); }
+.stat-card:nth-child(2) .stat-number { color: var(--accent); }
+.stat-card:nth-child(3) .stat-number { color: var(--success); }
+
+.stat-number .unit {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.counter {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.counter.burst {
+  animation: counterBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes counterBurst {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.stat-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+}
+
+.stat-source {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== ROLE ===== */
+.role {
+  padding: 80px 24px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.role-glow {
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.role-glow-1 {
+  top: -100px; right: -100px;
+  background: rgba(108,92,231,0.06);
+}
+
+.role-glow-2 {
+  bottom: -80px; left: -80px;
+  background: rgba(52,211,153,0.04);
+}
+
+.role h2 {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+}
+
+.role > .sub-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+}
+
+.compare-box {
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.anim .compare-box {
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim .compare-bad {
+  transform: translateY(30px);
+}
+
+.anim .compare-good {
+  transform: translateY(50px) scale(0.95);
+  transition-delay: 0.2s;
+  transition-duration: 0.8s;
+}
+
+.anim .compare-bad.visible,
+.anim .compare-good.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.compare-bad {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 24px 22px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  transition: opacity 0.6s, filter 0.6s, transform 0.6s;
+}
+
+.compare-bad.dimmed {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+.compare-good {
+  background: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.2);
+  padding: 24px 22px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-good::before {
+  content: '';
+  position: absolute;
+  top: -50px; right: -50px;
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.compare-label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compare-bad .compare-label { color: var(--text-secondary); }
+.compare-good .compare-label { color: #A78BFA; }
+
+.compare-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compare-list li {
+  font-size: 13.5px;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.compare-bad .compare-list li { color: var(--text-primary); opacity: 0.75; }
+
+.compare-good .compare-list li {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.compare-list .bullet {
+  flex-shrink: 0;
+  margin-top: 7px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+}
+
+.compare-bad .compare-list .bullet { background: var(--text-secondary); }
+
+.compare-good .compare-list li {
+  opacity: 0;
+  transform: translateX(-16px);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.compare-good.items-revealed .compare-list li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.compare-good .compare-list .bullet {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  background: rgba(108,92,231,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.compare-good .compare-list .bullet::after {
+  content: '';
+  width: 6px; height: 3px;
+  border-left: 1.5px solid #A78BFA;
+  border-bottom: 1.5px solid #A78BFA;
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: -1px;
+}
+
+.compare-good.items-revealed .compare-list .bullet::after {
+  transform: rotate(-45deg) scale(1);
+}
+
+/* ===== CTA BOTTOM ===== */
+.cta-bottom {
+  padding: 60px 24px 80px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-bottom-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-bottom h2 {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+  position: relative;
+}
+
+.cta-bottom .sub-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+/* ===== SCROLL COMMON ===== */
+.anim .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anim .reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tilt-card {
+  transition: transform 0.15s ease-out;
+}
+
+/* ===== CONSULT FORM ===== */
+.consult-form {
+  padding: 60px 24px 80px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.consult-form h2 {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+.consult-form h2 .grad {
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.consult-form .sub-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+.consult-form form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.consult-form label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+.consult-form input,
+.consult-form select,
+.consult-form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.consult-form input::placeholder,
+.consult-form textarea::placeholder { color: var(--text-tertiary); }
+.consult-form input:focus,
+.consult-form select:focus,
+.consult-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
+.consult-form textarea { min-height: 88px; resize: vertical; }
+.consult-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.55;
+  margin-top: 4px;
+}
+.consent input { width: auto; padding: 0; margin-top: 2px; accent-color: var(--accent); }
+.consult-form .submit {
+  margin-top: 8px;
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--gradient-1);
+  border: none;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
+  transition: transform 0.15s;
+}
+.consult-form .submit:active { transform: scale(0.98); }
+
+/* ===== FOOTER ===== */
+.lp-footer {
+  padding: 28px 24px 40px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text-tertiary);
+  text-align: center;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.lp-footer strong { color: var(--text-secondary); font-weight: 700; }
+
+/* ===== FLOATING CTA ===== */
+.float-cta {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 50;
+  width: calc(100% - 32px);
+  max-width: 448px;
+  padding: 14px 22px;
+  background: var(--gradient-1);
+  border: none;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 8px 28px rgba(108,92,231,0.45);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.float-cta.show { opacity: 1; pointer-events: auto; }
+
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brand">JJH<small>전준희 보험설계사</small></div>
-      <a class="call" href="tel:01012345678">상담전화</a>
-    </header>
+<div class="lp-wrap">
 
-    <!-- Hero -->
-    <div class="hero">
-      <span class="badge">⭐ 누적 상담 1,200건</span>
-      <h1>가족의 내일을 지키는<br/><b>맞춤형 보장 설계</b>를 시작하세요</h1>
-      <p>10년 경력 보험설계사가 직접 상담해 드립니다. 가입 전 부담 없는 무료 진단부터.</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-badge"><span class="pulse"></span> 무료 보험점검</div>
+  <h1>
+    <span class="line">가입만 하고</span>
+    <span class="line">끝난 보험,</span>
+    <span class="line"><span class="grad">필요할 때 보험금</span></span>
+    <span class="line"><span class="grad">받을 수 있나요?</span></span>
+  </h1>
+  <p class="hero-desc">
+    보험은 들어놓는 게 중요한 게 아니라<br>
+    아플 때 제대로 받는 게 중요합니다.
+  </p>
+  <div class="hero-cta-wrap">
+    <button class="btn-hero js-scroll-to-form" type="button">
+      내 보험 무료로 점검받기
+      <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </button>
+  </div>
+</section>
 
-      <div class="profile">
-        <div class="avatar">JJH</div>
-        <div class="who">
-          <strong>전준희 설계사</strong>
-          ㈜OO생명 · GA 소속 · 종합자산관리사
-        </div>
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-label reveal">CHECK</div>
+  <h2 class="reveal">
+    혹시 이런 상황,<br>
+    <span class="em">남의 일이라고 생각하셨나요?</span>
+  </h2>
+  <p class="sub-desc reveal">
+    보험에 가입해두고 안심하고 계신 분들이 많습니다.<br>
+    그런데 실제로는 이런 일이 생각보다 자주 일어납니다.
+  </p>
+  <div class="stat-cards">
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FF6B4A" stroke-width="2"/><path d="M12 7v10M15 9.5c0-1.38-1.34-2.5-3-2.5s-3 1.12-3 2.5 1.34 2.5 3 2.5 3 1.12 3 2.5-1.34 2.5-3 2.5" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="11">0</span><span class="unit">조원</span></div>
       </div>
+      <h3>아무도 안 찾아간 보험금</h3>
+      <p>청구할 수 있는 걸 몰라서, 귀찮아서, 그냥 넘어간 돈</p>
+      <span class="stat-source">금융감독원, 2025</span>
+    </div>
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="60">0</span><span class="unit">%</span></div>
+      </div>
+      <h3>5년도 못 채우고 해약</h3>
+      <p>10명 중 6명. 보험료만 수백만 원 내고 아무것도 못 받음</p>
+      <span class="stat-source">생명보험협회 공시, 2024</span>
+    </div>
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 7l9-4 9 4" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(-3,0)"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="64">0</span><span class="unit">%</span></div>
+      </div>
+      <h3>보험 싸움 10건 중 6건, "왜 안 줘?"</h3>
+      <p>청구했는데 안 주거나 깎인 경우. 준비를 어떻게 했느냐 차이</p>
+      <span class="stat-source">손해보험협회, 2025</span>
+    </div>
+  </div>
+</section>
 
-      <div class="cta-row">
-        <a class="btn btn-kakao" href="#contact">💬 카톡상담</a>
-        <a class="btn btn-tel" href="tel:01012345678">📞 전화상담</a>
+<!-- ROLE (DIFFERENCE) -->
+<section class="role">
+  <div class="role-glow role-glow-1"></div>
+  <div class="role-glow role-glow-2"></div>
+  <div class="section-label reveal">DIFFERENCE</div>
+  <h2 class="reveal">옆에서 봐주는 사람이<br>있고 없고의 차이</h2>
+  <p class="sub-desc reveal">
+    같은 보험이라도 관리하는 사람에 따라<br>
+    받는 금액이 달라질 수 있습니다.
+  </p>
+  <div class="compare-box compare-bad">
+    <div class="compare-label">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6 6l4 4M10 6l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      담당자 없이 혼자 관리할 때
+    </div>
+    <ul class="compare-list">
+      <li><span class="bullet"></span>청구할 수 있는 상황인지 몰라서 넘어감</li>
+      <li><span class="bullet"></span>서류 빠져서 보험금 깎임</li>
+      <li><span class="bullet"></span>보험료 부담돼서 결국 해약</li>
+      <li><span class="bullet"></span>내 보험에 뭐가 되는지도 모름</li>
+    </ul>
+  </div>
+  <div class="compare-box compare-good">
+    <div class="compare-label">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      전담 관리자가 함께할 때
+    </div>
+    <ul class="compare-list">
+      <li><span class="bullet"></span>받을 수 있는 건 빠짐없이 챙겨드립니다</li>
+      <li><span class="bullet"></span>유리한 방향으로 서류 준비를 도와드립니다</li>
+      <li><span class="bullet"></span>부담 안 되게 보험료 구조를 조정합니다</li>
+      <li><span class="bullet"></span>정기적으로 보장 내용을 점검합니다</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EXPERT -->
+<section class="expert">
+  <div class="expert-label reveal">EXPERT</div>
+  <h2 class="reveal">평범한 상담사가<br>가지 않습니다.</h2>
+  <p class="sub-desc reveal">
+    보험금을 받아본 사람만이 받는 법을 압니다.<br>
+    상담이 아니라, 실전 경험이 찾아갑니다.
+  </p>
+
+  <div class="expert-list">
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-claim">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#6C5CE7" stroke-width="2"/></svg>
+      </div>
+      <div>
+        <strong>수많은 보상 청구 경험</strong>
+        <p>단순 서류 접수가 아닌, 실제 보험금을 받아낸 현장 경험</p>
       </div>
     </div>
 
-    <!-- Stats -->
-    <section style="padding-top:0">
-      <div class="stats">
-        <div class="stat"><div class="n">10<small>년</small></div><div class="l">설계 경력</div></div>
-        <div class="stat"><div class="n">1,200<small>+</small></div><div class="l">누적 상담</div></div>
-        <div class="stat"><div class="n">98<small>%</small></div><div class="l">고객 만족</div></div>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-dispute">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-    </section>
-
-    <!-- About -->
-    <section>
-      <div class="eyebrow">About</div>
-      <h2>고객의 삶을 먼저 듣고,<br/><b>꼭 필요한 보장</b>만 설계합니다.</h2>
-      <p class="lead">
-        보험은 상품을 파는 일이 아니라 고객의 인생을 함께 설계하는 일이라고 믿습니다.
-        과한 보장도, 부족한 보장도 없이 라이프스타일에 딱 맞는 포트폴리오를 제안해 드립니다.
-      </p>
-    </section>
-
-    <!-- Services -->
-    <section>
-      <div class="eyebrow">Services</div>
-      <h2>이런 <b>상담</b>이 가능합니다</h2>
-      <div class="cards">
-        <div class="card">
-          <div class="ico">🛡️</div>
-          <h3>종합 건강보험</h3>
-          <p>암·뇌·심장 3대 진단부터 실손까지 한 번에 진단</p>
-        </div>
-        <div class="card">
-          <div class="ico">👨‍👩‍👧</div>
-          <h3>가족 보장 설계</h3>
-          <p>가장의 책임을 지키는 사망·후유장해 설계</p>
-        </div>
-        <div class="card">
-          <div class="ico">🧒</div>
-          <h3>어린이 보험</h3>
-          <p>출생 전부터 30세까지 평생 든든한 보장</p>
-        </div>
-        <div class="card">
-          <div class="ico">💰</div>
-          <h3>연금·저축</h3>
-          <p>은퇴 후 현금흐름을 만드는 장기 자산 설계</p>
-        </div>
-        <div class="card">
-          <div class="ico">🏥</div>
-          <h3>실손 리모델링</h3>
-          <p>오래된 실손, 보험료 부담 줄이고 보장 강화</p>
-        </div>
-        <div class="card">
-          <div class="ico">🏢</div>
-          <h3>법인·사업자</h3>
-          <p>CEO 플랜, 퇴직금, 위험 분담 종합 컨설팅</p>
-        </div>
+      <div>
+        <strong>실제 분쟁 사례 해결 능력</strong>
+        <p>보험사와의 분쟁에서 고객 편에 서서 끝까지 해결한 실전 이력</p>
       </div>
-    </section>
+    </div>
 
-    <!-- Why -->
-    <section>
-      <div class="eyebrow">Why me</div>
-      <h2>전준희 설계사를 <b>선택해야 하는 이유</b></h2>
-      <ul class="why">
-        <li>
-          <div class="num">01</div>
-          <div>
-            <h4>40여 개 보험사 비교 설계</h4>
-            <p>특정 회사에 치우치지 않고 객관적인 비교로 가장 합리적인 상품을 제안합니다.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">02</div>
-          <div>
-            <h4>가입 이후가 진짜 시작</h4>
-            <p>보험금 청구·갱신·리모델링까지 평생 1:1 사후 관리해 드립니다.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">03</div>
-          <div>
-            <h4>강요 없는 무료 상담</h4>
-            <p>가입을 권하지 않습니다. 먼저 보장 분석 리포트를 받아 보세요.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">04</div>
-          <div>
-            <h4>방문 / 비대면 모두 가능</h4>
-            <p>편한 장소·시간에 맞춰 찾아 뵙거나 화상 상담으로 진행합니다.</p>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Reviews -->
-    <section>
-      <div class="eyebrow">Reviews</div>
-      <h2>고객님들의 <b>실제 후기</b></h2>
-      <div class="reviews">
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"기존 보험 정리부터 신규 가입까지 꼼꼼하게 챙겨 주셔서 매달 12만 원을 아꼈어요. 무엇보다 강요가 없어서 좋았습니다."</p>
-          <div class="who2">— 30대 직장인 김○○ 님</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"아이 출생 전부터 상담받았는데 설명이 정말 쉬워요. 5년째 계속 도움 받고 있습니다."</p>
-          <div class="who2">— 40대 주부 이○○ 님</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"법인 CEO 플랜을 의뢰했는데 세무사·노무사와 함께 다각도로 봐주셔서 신뢰가 갔습니다."</p>
-          <div class="who2">— 중소기업 대표 박○○ 님</div>
-        </div>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-pro">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 15l-2 5 2-2 2 2-2-5z" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9" r="6" stroke="#34D399" stroke-width="2"/></svg>
       </div>
-    </section>
+      <div>
+        <strong>손해사정회사 전문위원 출신</strong>
+        <p>보험사 내부 논리를 꿰뚫는 전문 자격과 실무 경력</p>
+      </div>
+    </div>
 
-    <!-- Form -->
-    <section id="contact">
-      <div class="eyebrow">Free consult</div>
-      <h2>무료 보장 분석<br/><b>지금 신청하기</b></h2>
-      <p class="lead">신청해 주신 정보로 24시간 이내 연락드립니다.</p>
-
-      <form class="form" onsubmit="event.preventDefault();alert('상담 신청이 접수되었습니다. 곧 연락드리겠습니다 :)');">
-        <label for="name">성함</label>
-        <input id="name" name="name" required placeholder="홍길동" />
-
-        <div class="row">
-          <div>
-            <label for="phone">연락처</label>
-            <input id="phone" name="phone" type="tel" required placeholder="010-0000-0000" />
-          </div>
-          <div>
-            <label for="age">나이</label>
-            <input id="age" name="age" type="number" min="0" placeholder="35" />
-          </div>
-        </div>
-
-        <label for="topic">관심 분야</label>
-        <select id="topic" name="topic">
-          <option>건강·암보험</option>
-          <option>실손 리모델링</option>
-          <option>어린이 보험</option>
-          <option>종신·정기보험</option>
-          <option>연금·저축</option>
-          <option>법인·사업자</option>
-          <option>기타 / 전체 진단</option>
-        </select>
-
-        <label for="memo">남기실 말씀 (선택)</label>
-        <textarea id="memo" name="memo" placeholder="예) 평일 저녁 7시 이후 연락 가능합니다."></textarea>
-
-        <label class="check">
-          <input type="checkbox" required />
-          <span>개인정보 수집·이용에 동의합니다. (상담 목적 외 사용하지 않으며 1년 후 파기됩니다.)</span>
-        </label>
-
-        <button class="submit" type="submit">무료 상담 신청하기</button>
-      </form>
-    </section>
-
-    <!-- FAQ -->
-    <section>
-      <div class="eyebrow">FAQ</div>
-      <h2>자주 묻는 <b>질문</b></h2>
-
-      <details>
-        <summary>상담은 정말 무료인가요?</summary>
-        <p>네, 상담과 보장 분석 리포트까지 모두 무료입니다. 가입 강요는 절대 없습니다.</p>
-      </details>
-      <details>
-        <summary>제 보험을 한눈에 정리받을 수 있나요?</summary>
-        <p>가지고 계신 증권을 보내 주시면 한 장의 분석 리포트로 정리해 드립니다.</p>
-      </details>
-      <details>
-        <summary>지역이 멀어도 상담이 가능한가요?</summary>
-        <p>전국 어디든 화상·전화 상담이 가능하며 수도권은 직접 방문도 가능합니다.</p>
-      </details>
-      <details>
-        <summary>이미 가입한 보험을 해지해야 하나요?</summary>
-        <p>아닙니다. 우선 진단 후 유지·보완·해지 여부를 객관적으로 함께 결정합니다.</p>
-      </details>
-    </section>
-
-    <footer>
-      <div class="logo">전준희 보험설계사</div>
-      서울특별시 강남구 · 사업자등록 000-00-00000<br/>
-      © <span id="y"></span> JJH. All rights reserved.
-    </footer>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-media">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="15" rx="2" stroke="#A855F7" stroke-width="2"/><path d="M17 2l-5 5-5-5" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <strong>언론에 보도된 상담사</strong>
+        <p>방송과 기사에서 검증된 전문성, 이름을 걸고 찾아갑니다</p>
+      </div>
+    </div>
   </div>
 
-  <nav class="floatbar">
-    <a class="fb-call" href="tel:01012345678">📞 전화</a>
-    <a class="fb-kakao" href="https://pf.kakao.com/">💬 카톡</a>
-    <a class="fb-form" href="#contact">📝 상담신청</a>
-  </nav>
+  <div class="expert-bottom reveal">
+    가입할 때가 아니라,<br><span>받아야 할 때 진짜 힘이 되는 사람</span>이 갑니다.
+  </div>
+</section>
 
-  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+<!-- CTA BOTTOM -->
+<section class="cta-bottom">
+  <div class="cta-bottom-glow"></div>
+  <div class="section-label reveal">START NOW</div>
+  <h2 class="reveal">지금 바로<br>확인해보세요</h2>
+  <p class="sub-desc reveal">5분이면 신청 끝. 비용은 없습니다.</p>
+  <button class="btn-hero reveal js-scroll-to-form" type="button">
+    무료 보험점검 신청하기
+    <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </button>
+</section>
+
+
+<!-- CONSULT FORM -->
+<section class="consult-form" id="consult-form">
+  <div class="section-label reveal">FREE CHECK</div>
+  <h2 class="reveal">
+    아래 정보만 남겨주시면<br>
+    <span class="grad">전문가가 직접 연락드립니다</span>
+  </h2>
+  <p class="sub-desc reveal">상담 비용은 100% 무료입니다. 가입 강요는 절대 없습니다.</p>
+  <form onsubmit="event.preventDefault(); var btn=this.querySelector('.submit'); btn.textContent='접수 완료 ✓'; btn.disabled=true; alert('신청이 접수되었습니다. 24시간 이내에 연락드리겠습니다.');">
+    <div>
+      <label for="cf-name">이름</label>
+      <input id="cf-name" name="name" required placeholder="홍길동" />
+    </div>
+    <div class="field-row">
+      <div>
+        <label for="cf-phone">연락처</label>
+        <input id="cf-phone" name="phone" type="tel" required placeholder="010-0000-0000" />
+      </div>
+      <div>
+        <label for="cf-age">나이</label>
+        <input id="cf-age" name="age" type="number" min="0" placeholder="35" />
+      </div>
+    </div>
+    <div>
+      <label for="cf-topic">점검 받고 싶은 항목</label>
+      <select id="cf-topic" name="topic">
+        <option>전체 보험 점검</option>
+        <option>실손 / 의료비 보험</option>
+        <option>암 · 3대 진단 보험</option>
+        <option>종신 · 정기 보험</option>
+        <option>어린이 보험</option>
+        <option>연금 · 저축</option>
+        <option>보험금 청구 / 분쟁 상담</option>
+      </select>
+    </div>
+    <div>
+      <label for="cf-memo">남기실 말씀 (선택)</label>
+      <textarea id="cf-memo" name="memo" placeholder="예) 평일 저녁 7시 이후 연락 가능합니다."></textarea>
+    </div>
+    <label class="consent">
+      <input type="checkbox" required />
+      <span>개인정보 수집·이용에 동의합니다. (상담 목적 외 사용하지 않으며 종료 후 안전하게 파기합니다.)</span>
+    </label>
+    <button class="submit" type="submit">무료 점검 신청하기</button>
+  </form>
+</section>
+
+<footer class="lp-footer">
+  <strong>JJH 보험점검 센터</strong><br>
+  손해사정사 협력 · 전국 무료 상담 · 평일 09:00 - 21:00<br>
+  © <span id="cur-year"></span> JJH. All rights reserved.
+</footer>
+
+<button class="float-cta js-scroll-to-form" type="button">무료 보험점검 신청하기</button>
+
+</div><!-- /lp-wrap -->
+
+<script>
+document.body.classList.add('anim');
+const wrap = document.querySelector('.lp-wrap');
+if (wrap) wrap.classList.add('anim');
+
+// ===== INTERSECTION OBSERVER =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    el.classList.add('visible');
+
+    // Counter with burst + flash
+    if (el.classList.contains('stat-card')) {
+      const counter = el.querySelector('.counter');
+      if (counter && !counter.dataset.animated) {
+        counter.dataset.animated = 'true';
+        animateCounter(counter, () => {
+          counter.classList.add('burst');
+          el.classList.add('counted');
+        });
+      }
+    }
+
+    // Compare: dim bad when good appears
+    if (el.classList.contains('compare-good')) {
+      const bad = document.querySelector('.compare-bad');
+      if (bad) bad.classList.add('dimmed');
+      setTimeout(() => {
+        el.classList.add('items-revealed');
+        const items = el.querySelectorAll('.compare-list li');
+        items.forEach((li, i) => {
+          li.style.transitionDelay = `${i * 0.12}s`;
+        });
+      }, 400);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
+  observer.observe(el);
+});
+
+// ===== STAGGER DELAYS =====
+function addStagger(selector, baseDelay = 0) {
+  document.querySelectorAll(selector).forEach((el, i) => {
+    el.style.transitionDelay = `${baseDelay + i * 0.12}s`;
+  });
+}
+
+addStagger('.stat-card');
+
+// ===== COUNTER ANIMATION =====
+function animateCounter(el, onComplete) {
+  const target = parseInt(el.dataset.target);
+  const duration = 1400;
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.round(target * eased);
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      if (onComplete) onComplete();
+    }
+  }
+  requestAnimationFrame(update);
+}
+
+// ===== TILT EFFECT =====
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('pointermove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -3;
+    const rotateY = ((x - centerX) / centerX) * 3;
+    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+  });
+  card.addEventListener('pointerleave', () => {
+    card.style.transform = '';
+  });
+});
+
+// ===== BUTTON RIPPLE =====
+document.querySelectorAll('.btn-hero').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height) * 2;
+    ripple.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);transform:scale(0);animation:btnRipple 0.6s linear;pointer-events:none;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;`;
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
+
+const style = document.createElement('style');
+style.textContent = '@keyframes btnRipple { to { transform: scale(1); opacity: 0; } }';
+document.head.appendChild(style);
+
+// ===== FALLBACK =====
+setTimeout(() => {
+  document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
+    if (!el.classList.contains('visible')) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 100) el.classList.add('visible');
+    }
+  });
+}, 5000);
+
+// ===== CTA → 랜딩 페이지 끝을 뷰포트 최상단으로 (plink-manager/dbmaker 폼 노출) =====
+function bjSmoothScrollTo(win, targetY, duration) {
+  var doc, body;
+  try { doc = win.document.documentElement; body = win.document.body; } catch(e) { doc = null; body = null; }
+  var start = 0;
+  try { start = win.pageYOffset || (doc && doc.scrollTop) || (body && body.scrollTop) || 0; } catch(e) {}
+  var dist = targetY - start;
+  var t0 = Date.now();
+  var d = duration || 650;
+  function ease(t) { return 1 - Math.pow(1 - t, 3); }
+  function tick() {
+    var elapsed = Date.now() - t0;
+    var p = elapsed / d;
+    if (p > 1) p = 1;
+    var y = start + dist * ease(p);
+    try { win.scrollTo(0, y); } catch(e) {}
+    try { if (doc) doc.scrollTop = y; } catch(e) {}
+    try { if (body) body.scrollTop = y; } catch(e) {}
+    if (p < 1) setTimeout(tick, 16);
+  }
+  tick();
+}
+
+document.querySelectorAll('.js-scroll-to-form').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.getElementById('consult-form');
+    if (!target) return;
+    var rect = target.getBoundingClientRect();
+    var targetY = (window.pageYOffset || document.documentElement.scrollTop) + rect.top - 24;
+    bjSmoothScrollTo(window, targetY, 700);
+  });
+});
+
+
+// ===== FLOATING CTA visibility =====
+(function(){
+  var btn = document.querySelector('.float-cta');
+  var hero = document.querySelector('.hero');
+  var form = document.getElementById('consult-form');
+  if (!btn || !hero || !form) return;
+  function onScroll(){
+    var heroBottom = hero.getBoundingClientRect().bottom;
+    var formTop = form.getBoundingClientRect().top;
+    var vh = window.innerHeight;
+    if (heroBottom < 80 && formTop > vh - 120) btn.classList.add('show');
+    else btn.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+var yearEl = document.getElementById('cur-year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+</script>
+
 </body>
 </html>
