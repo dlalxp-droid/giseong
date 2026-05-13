@@ -2,1112 +2,571 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>보험점검 - 받을 수 있는 보험인지, 지금 확인하세요</title>
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<meta name="description" content="가입만 하고 끝난 보험, 정말 필요할 때 보험금 받을 수 있는지 무료로 점검해 드립니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-:root {
-  --bg: #0A0A0B;
-  --bg-card: #141416;
-  --bg-elevated: #1A1A1E;
-  --bg-hover: #222228;
-  --surface: #FAFAFA;
-  --text-primary: #F5F5F7;
-  --text-secondary: rgba(245,245,247,0.7);
-  --text-tertiary: rgba(245,245,247,0.5);
-  --accent: #6C5CE7;
-  --accent-light: rgba(108,92,231,0.12);
-  --accent-glow: rgba(108,92,231,0.25);
-  --warm: #FF6B4A;
-  --warm-light: rgba(255,107,74,0.1);
-  --success: #34D399;
-  --success-light: rgba(52,211,153,0.1);
-  --border: rgba(255,255,255,0.1);
-  --border-hover: rgba(255,255,255,0.18);
-  --gradient-1: linear-gradient(135deg, #6C5CE7 0%, #A855F7 100%);
-  --gradient-2: linear-gradient(135deg, #FF6B4A 0%, #FF9A76 100%);
-  --gradient-3: linear-gradient(135deg, #34D399 0%, #6EE7B7 100%);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
-body, .lp-wrap {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  background: var(--bg);
-  color: var(--text-primary);
-  max-width: 480px;
-  margin: 0 auto;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.02em;
-  word-break: keep-all;
-  position: relative;
-}
-
-
-/* ===== HERO ===== */
-.hero {
-  padding: 80px 28px 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  will-change: transform;
-  animation: orbFloat 12s ease-in-out infinite;
-}
-
-.hero-orb-1 {
-  width: 280px; height: 280px;
-  background: rgba(108,92,231,0.15);
-  top: 10%; right: -20%;
-}
-
-.hero-orb-2 {
-  width: 200px; height: 200px;
-  background: rgba(255,107,74,0.08);
-  bottom: 15%; left: -15%;
-  animation-delay: -4s;
-}
-
-@keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(15px, -20px) scale(1.05); }
-  66% { transform: translate(-10px, 10px) scale(0.95); }
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--accent-light);
-  border: 1px solid rgba(108,92,231,0.2);
-  padding: 8px 16px;
-  border-radius: 100px;
-  font-size: 12px;
-  color: #A78BFA;
-  font-weight: 600;
-  margin-bottom: 32px;
-  width: fit-content;
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(10px);
-  opacity: 0; transform: translateY(20px);
-  animation: revealUp 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
-}
-
-.hero-badge .pulse {
-  width: 6px; height: 6px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: relative;
-}
-
-.hero-badge .pulse::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1.5px solid var(--accent);
-  animation: pulseRing 2s ease-out infinite;
-}
-
-@keyframes pulseRing {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-
-.hero h1 {
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.35;
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-  letter-spacing: -0.04em;
-}
-
-.hero h1 .line {
-  display: block;
-  opacity: 0;
-  transform: translateY(40px);
-  animation: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
-}
-
-.hero h1 .line:nth-child(1) { animation-delay: 0.3s; }
-.hero h1 .line:nth-child(2) { animation-delay: 0.4s; }
-.hero h1 .line:nth-child(3) { animation-delay: 0.5s; }
-.hero h1 .line:nth-child(4) { animation-delay: 0.6s; }
-
-.hero h1 .grad {
-  background: var(--gradient-1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-desc {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--text-secondary);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  opacity: 0; transform: translateY(30px);
-  animation: revealUp 0.8s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
-  position: relative; z-index: 1;
-}
-
-.hero-cta-wrap {
-  margin-top: 40px;
-  opacity: 0; transform: translateY(30px);
-  animation: revealUp 0.8s 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
-  position: relative; z-index: 1;
-}
-
-.btn-hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  padding: 18px 24px;
-  background: var(--gradient-1);
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  letter-spacing: -0.02em;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.3s;
-  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
-}
-
-.btn-hero:active { transform: scale(0.97); }
-
-.btn-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
-  transform: translateX(-100%);
-  animation: sheen 4s 1.5s infinite;
-}
-
-@keyframes sheen {
-  0% { transform: translateX(-100%); }
-  20% { transform: translateX(100%); }
-  100% { transform: translateX(100%); }
-}
-
-.btn-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px; height: 28px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 8px;
-  transition: transform 0.3s;
-}
-
-@keyframes revealUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-/* ===== EXPERT ===== */
-.expert {
-  padding: 48px 28px 56px;
-  position: relative;
-}
-
-.expert-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--warm);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 16px;
-}
-
-.expert h2 {
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.4;
-  letter-spacing: -0.03em;
-  margin-bottom: 10px;
-}
-
-.expert .sub-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 32px;
-}
-
-.expert-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.expert-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px 18px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  transition: border-color 0.3s, transform 0.3s;
-}
-
-.expert-item:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-
-.expert-icon {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.expert-icon.ic-claim { background: var(--accent-light); }
-.expert-icon.ic-dispute { background: var(--warm-light); }
-.expert-icon.ic-pro { background: var(--success-light); }
-.expert-icon.ic-media { background: rgba(168,85,247,0.1); }
-
-.expert-item strong {
-  display: block;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 5px;
-  color: var(--text-primary);
-}
-
-.expert-item p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-tertiary);
-}
-
-.expert-bottom {
-  margin-top: 28px;
-  padding: 22px 20px;
-  background: linear-gradient(135deg, rgba(108,92,231,0.08) 0%, rgba(255,107,74,0.06) 100%);
-  border: 1px solid rgba(108,92,231,0.15);
-  border-radius: 16px;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.65;
-  color: var(--text-secondary);
-  letter-spacing: -0.02em;
-}
-
-.expert-bottom span {
-  color: #A78BFA;
-  font-weight: 700;
-}
-
-/* ===== SECTION COMMON ===== */
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 16px;
-}
-
-.section-label::before {
-  content: '';
-  width: 16px; height: 1.5px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-
-/* ===== PROBLEM ===== */
-.problem {
-  padding: 80px 24px;
-  background: var(--bg);
-}
-
-.problem h2 {
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.4;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  letter-spacing: -0.03em;
-}
-
-.problem h2 .em {
-  background: var(--gradient-2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.problem > .sub-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 36px;
-}
-
-.stat-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.stat-card {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 24px 22px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  transition: border-color 0.4s, transform 0.4s;
-}
-
-.stat-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-
-.anim .stat-card {
-  opacity: 0;
-  transform: translateY(50px) scale(0.95);
-  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.anim .stat-card.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  opacity: 0;
-  transition: opacity 0.6s;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.stat-card:nth-child(1)::before { background: radial-gradient(ellipse at 80% 20%, rgba(255,107,74,0.15) 0%, transparent 60%); }
-.stat-card:nth-child(2)::before { background: radial-gradient(ellipse at 80% 20%, rgba(108,92,231,0.15) 0%, transparent 60%); }
-.stat-card:nth-child(3)::before { background: radial-gradient(ellipse at 80% 20%, rgba(52,211,153,0.15) 0%, transparent 60%); }
-
-.stat-card.counted::before {
-  opacity: 1;
-  animation: flashGlow 1.2s ease-out;
-}
-
-@keyframes flashGlow {
-  0% { opacity: 0; }
-  30% { opacity: 1; }
-  100% { opacity: 0.4; }
-}
-
-.stat-card::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 120px; height: 120px;
-  border-radius: 50%;
-  filter: blur(50px);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.stat-card:nth-child(1)::after { background: rgba(255,107,74,0.12); }
-.stat-card:nth-child(2)::after { background: rgba(108,92,231,0.12); }
-.stat-card:nth-child(3)::after { background: rgba(52,211,153,0.12); }
-
-.stat-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 1;
-}
-
-.stat-card .icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.stat-card:nth-child(1) .icon { background: var(--warm-light); }
-.stat-card:nth-child(2) .icon { background: var(--accent-light); }
-.stat-card:nth-child(3) .icon { background: var(--success-light); }
-
-.stat-number {
-  font-size: 40px;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  position: relative;
-  z-index: 1;
-}
-
-.stat-card:nth-child(1) .stat-number { color: var(--warm); }
-.stat-card:nth-child(2) .stat-number { color: var(--accent); }
-.stat-card:nth-child(3) .stat-number { color: var(--success); }
-
-.stat-number .unit {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.counter {
-  display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.counter.burst {
-  animation: counterBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes counterBurst {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.25); }
-  70% { transform: scale(0.95); }
-  100% { transform: scale(1); }
-}
-
-.stat-card h3 {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-  position: relative;
-  z-index: 1;
-}
-
-.stat-card p {
-  font-size: 13px;
-  line-height: 1.65;
-  color: var(--text-secondary);
-  position: relative;
-  z-index: 1;
-}
-
-.stat-source {
-  display: block;
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--text-secondary);
-  position: relative;
-  z-index: 1;
-}
-
-/* ===== ROLE ===== */
-.role {
-  padding: 80px 24px;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.role-glow {
-  position: absolute;
-  width: 300px; height: 300px;
-  border-radius: 50%;
-  filter: blur(100px);
-  pointer-events: none;
-}
-
-.role-glow-1 {
-  top: -100px; right: -100px;
-  background: rgba(108,92,231,0.06);
-}
-
-.role-glow-2 {
-  bottom: -80px; left: -80px;
-  background: rgba(52,211,153,0.04);
-}
-
-.role h2 {
-  font-size: 26px;
-  font-weight: 800;
-  line-height: 1.4;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  letter-spacing: -0.03em;
-}
-
-.role > .sub-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  margin-bottom: 36px;
-}
-
-.compare-box {
-  border-radius: 20px;
-  overflow: hidden;
-  margin-bottom: 12px;
-}
-
-.anim .compare-box {
-  opacity: 0;
-  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.anim .compare-bad {
-  transform: translateY(30px);
-}
-
-.anim .compare-good {
-  transform: translateY(50px) scale(0.95);
-  transition-delay: 0.2s;
-  transition-duration: 0.8s;
-}
-
-.anim .compare-bad.visible,
-.anim .compare-good.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.compare-bad {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  padding: 24px 22px;
-  border-radius: 20px;
-  margin-bottom: 12px;
-  transition: opacity 0.6s, filter 0.6s, transform 0.6s;
-}
-
-.compare-bad.dimmed {
-  opacity: 0.7;
-  transform: scale(0.98);
-}
-
-.compare-good {
-  background: var(--accent-light);
-  border: 1px solid rgba(108,92,231,0.2);
-  padding: 24px 22px;
-  border-radius: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.compare-good::before {
-  content: '';
-  position: absolute;
-  top: -50px; right: -50px;
-  width: 150px; height: 150px;
-  background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.compare-label {
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.compare-bad .compare-label { color: var(--text-secondary); }
-.compare-good .compare-label { color: #A78BFA; }
-
-.compare-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.compare-list li {
-  font-size: 13.5px;
-  line-height: 1.6;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.compare-bad .compare-list li { color: var(--text-primary); opacity: 0.75; }
-
-.compare-good .compare-list li {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.compare-list .bullet {
-  flex-shrink: 0;
-  margin-top: 7px;
-  width: 4px; height: 4px;
-  border-radius: 50%;
-}
-
-.compare-bad .compare-list .bullet { background: var(--text-secondary); }
-
-.compare-good .compare-list li {
-  opacity: 0;
-  transform: translateX(-16px);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.compare-good.items-revealed .compare-list li {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.compare-good .compare-list .bullet {
-  width: 16px; height: 16px;
-  border-radius: 4px;
-  background: rgba(108,92,231,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 3px;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.compare-good .compare-list .bullet::after {
-  content: '';
-  width: 6px; height: 3px;
-  border-left: 1.5px solid #A78BFA;
-  border-bottom: 1.5px solid #A78BFA;
-  transform: rotate(-45deg) scale(0);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin-top: -1px;
-}
-
-.compare-good.items-revealed .compare-list .bullet::after {
-  transform: rotate(-45deg) scale(1);
-}
-
-/* ===== CTA BOTTOM ===== */
-.cta-bottom {
-  padding: 60px 24px 80px;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-bottom-glow {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.cta-bottom h2 {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.4;
-  margin-bottom: 12px;
-  letter-spacing: -0.03em;
-  position: relative;
-}
-
-.cta-bottom .sub-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 32px;
-  position: relative;
-}
-
-/* ===== SCROLL COMMON ===== */
-.anim .reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.anim .reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.tilt-card {
-  transition: transform 0.15s ease-out;
-}
-
-/* ===== CONSULT FORM ===== */
-.consult-form {
-  padding: 60px 24px 80px;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-}
-.consult-form h2 {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.4;
-  letter-spacing: -0.03em;
-  margin-bottom: 10px;
-}
-.consult-form h2 .grad {
-  background: var(--gradient-1);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.consult-form .sub-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 28px;
-}
-.consult-form form {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.consult-form label {
-  display: block;
-  font-size: 12px;
-  color: var(--text-tertiary);
-  margin-bottom: 6px;
-  letter-spacing: 0.02em;
-  font-weight: 600;
-}
-.consult-form input,
-.consult-form select,
-.consult-form textarea {
-  width: 100%;
-  padding: 14px 16px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 15px;
-  letter-spacing: -0.01em;
-  transition: border-color 0.2s, background 0.2s;
-}
-.consult-form input::placeholder,
-.consult-form textarea::placeholder { color: var(--text-tertiary); }
-.consult-form input:focus,
-.consult-form select:focus,
-.consult-form textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-hover);
-}
-.consult-form textarea { min-height: 88px; resize: vertical; }
-.consult-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.consent {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--text-tertiary);
-  line-height: 1.55;
-  margin-top: 4px;
-}
-.consent input { width: auto; padding: 0; margin-top: 2px; accent-color: var(--accent); }
-.consult-form .submit {
-  margin-top: 8px;
-  width: 100%;
-  padding: 18px 24px;
-  background: var(--gradient-1);
-  border: none;
-  border-radius: 16px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
-  transition: transform 0.15s;
-}
-.consult-form .submit:active { transform: scale(0.98); }
-
-/* ===== FOOTER ===== */
-.lp-footer {
-  padding: 28px 24px 40px;
-  font-size: 11px;
-  line-height: 1.7;
-  color: var(--text-tertiary);
-  text-align: center;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-}
-.lp-footer strong { color: var(--text-secondary); font-weight: 700; }
-
-/* ===== FLOATING CTA ===== */
-.float-cta {
-  position: fixed;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
-  z-index: 50;
-  width: calc(100% - 32px);
-  max-width: 448px;
-  padding: 14px 22px;
-  background: var(--gradient-1);
-  border: none;
-  border-radius: 16px;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  cursor: pointer;
-  font-family: inherit;
-  box-shadow: 0 8px 28px rgba(108,92,231,0.45);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-.float-cta.show { opacity: 1; pointer-events: auto; }
-
+  :root {
+    --bg: #FFFFFF;
+    --bg-soft: #F7F8FB;
+    --bg-card: #FFFFFF;
+    --bg-elev: #F1F4F9;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --ink-3: #64748B;
+    --line: #E5E8EE;
+    --line-strong: #CBD3DE;
+    --brand: #2D5BFF;
+    --brand-soft: #EEF2FF;
+    --brand-ink: #1E3FCC;
+    --warn: #E85A4F;
+    --warn-soft: #FFEFEE;
+    --ok: #00A36E;
+    --ok-soft: #E6F6EF;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --shadow-md: 0 8px 24px rgba(15,23,42,.06);
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    max-width: 480px;
+    margin: 0 auto;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+  }
+  button, input, select, textarea { font-family: inherit; }
+
+  /* ===== Top bar ===== */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .brand { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+  .topbar .brand span { color: var(--brand); }
+  .topbar .small-cta {
+    font-size: 13px; font-weight: 700; color: var(--brand);
+    padding: 7px 12px; border-radius: 999px;
+    background: var(--brand-soft); border: 1px solid #DDE5FF;
+    text-decoration: none;
+  }
+
+  /* ===== Common labels & headings ===== */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 800; color: var(--brand);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before {
+    content: ''; width: 18px; height: 2px;
+    background: var(--brand); border-radius: 2px;
+  }
+  h1 {
+    font-size: 30px; font-weight: 800; line-height: 1.32;
+    letter-spacing: -0.035em; color: var(--ink);
+  }
+  h1 em { color: var(--brand); font-style: normal; }
+  h2 {
+    font-size: 24px; font-weight: 800; line-height: 1.35;
+    letter-spacing: -0.03em; color: var(--ink);
+    margin-bottom: 10px;
+  }
+  h2 em { color: var(--brand); font-style: normal; }
+  h2 em.warn { color: var(--warn); }
+  .lead {
+    font-size: 15px; line-height: 1.7;
+    color: var(--ink-2); margin-bottom: 24px;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 44px 24px 44px;
+    background:
+      radial-gradient(120% 60% at 100% 0%, #EEF2FF 0%, transparent 60%),
+      radial-gradient(80% 50% at 0% 100%, #FFEFEE 0%, transparent 60%),
+      #FFFFFF;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid #DDE5FF; color: var(--brand-ink);
+    padding: 7px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(45,91,255,.06);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand); position: relative;
+  }
+  .hero-badge .dot::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 1.5px solid var(--brand); animation: ping 2s ease-out infinite;
+  }
+  @keyframes ping {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  .hero h1 { margin-bottom: 14px; }
+  .hero p.lead { margin-bottom: 28px; }
+  .btn-primary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 17px 22px;
+    background: var(--brand); color: #fff;
+    border: none; border-radius: 14px;
+    font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(45,91,255,.25);
+    transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+  }
+  .btn-primary:hover { background: var(--brand-ink); box-shadow: 0 6px 20px rgba(45,91,255,.32); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary .arrow {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+  }
+
+  /* ===== Section ===== */
+  section { padding: 56px 24px; }
+  .section-alt { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+  /* ===== Stat cards ===== */
+  .stat-cards { display: flex; flex-direction: column; gap: 12px; }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-2px); border-color: var(--line-strong); box-shadow: var(--shadow-md); }
+  .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .stat-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stat-icon.c1 { background: var(--warn-soft); }
+  .stat-icon.c2 { background: var(--brand-soft); }
+  .stat-icon.c3 { background: var(--ok-soft); }
+  .stat-num { font-size: 34px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .stat-num .unit { font-size: 16px; font-weight: 700; margin-left: 2px; }
+  .stat-card.c1 .stat-num { color: var(--warn); }
+  .stat-card.c2 .stat-num { color: var(--brand); }
+  .stat-card.c3 .stat-num { color: var(--ok); }
+  .stat-card h3 { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .stat-card p { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; }
+  .stat-source { display: block; margin-top: 10px; font-size: 11px; color: var(--ink-3); }
+
+  /* ===== Compare ===== */
+  .compare { display: flex; flex-direction: column; gap: 12px; }
+  .compare-card {
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    border: 1px solid var(--line);
+  }
+  .compare-card.bad { background: #FAFBFD; }
+  .compare-card.good {
+    background: var(--brand-soft);
+    border-color: #C9D4FF;
+  }
+  .compare-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.02em;
+    margin-bottom: 14px;
+  }
+  .compare-card.bad .compare-label { color: var(--ink-3); }
+  .compare-card.good .compare-label { color: var(--brand-ink); }
+  .compare-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .compare-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; line-height: 1.55;
+  }
+  .compare-list .ic { flex-shrink: 0; margin-top: 2px; width: 18px; height: 18px; }
+  .compare-card.bad .compare-list li { color: var(--ink-2); }
+  .compare-card.good .compare-list li { color: var(--ink); font-weight: 600; }
+
+  /* ===== Expert ===== */
+  .expert-list { display: flex; flex-direction: column; gap: 12px; }
+  .expert-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 18px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .expert-icon {
+    flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .expert-icon.c1 { background: var(--brand-soft); }
+  .expert-icon.c2 { background: var(--warn-soft); }
+  .expert-icon.c3 { background: var(--ok-soft); }
+  .expert-icon.c4 { background: #F2EFFE; }
+  .expert-item h4 { font-size: 15px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.02em; }
+  .expert-item p { font-size: 13.5px; color: var(--ink-2); line-height: 1.6; }
+  .expert-bottom {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 14px;
+    background: var(--brand-soft);
+    border: 1px solid #DCE3FF;
+    text-align: center;
+    font-size: 14.5px; font-weight: 600; line-height: 1.65;
+    color: var(--ink);
+  }
+  .expert-bottom strong { color: var(--brand-ink); font-weight: 800; }
+
+  /* ===== CTA strip ===== */
+  .cta-strip {
+    text-align: center;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 50px 24px;
+  }
+  .cta-strip .eyebrow { justify-content: center; }
+  .cta-strip h2 { margin-bottom: 8px; }
+  .cta-strip .lead { margin-bottom: 22px; }
+
+  /* ===== Form ===== */
+  .form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field label { font-size: 12.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 13px 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: var(--ink);
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: #94A3B8; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(45,91,255,.12);
+  }
+  .field textarea { resize: vertical; min-height: 84px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .consent {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12.5px; color: var(--ink-3); line-height: 1.55;
+    padding: 2px 0;
+  }
+  .consent input { width: 18px; height: 18px; accent-color: var(--brand); margin-top: 2px; flex-shrink: 0; }
+  .submit-btn {
+    margin-top: 6px;
+    padding: 16px 22px;
+    background: var(--brand);
+    color: #fff; border: none; border-radius: 14px;
+    font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(45,91,255,.25);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--brand-ink); }
+  .submit-btn:active:not(:disabled) { transform: scale(0.98); }
+  .submit-btn:disabled { background: #94A3B8; cursor: not-allowed; box-shadow: none; }
+
+  /* ===== Footer ===== */
+  .lp-footer {
+    padding: 28px 24px 100px;
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--ink-3);
+    text-align: center;
+    background: #fff;
+    border-top: 1px solid var(--line);
+  }
+  .lp-footer strong { color: var(--ink-2); font-weight: 700; }
+
+  /* ===== Floating CTA ===== */
+  .float-cta {
+    position: fixed; left: 50%; bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 40;
+    width: calc(100% - 32px); max-width: 448px;
+    padding: 15px 22px;
+    background: var(--brand); color: #fff;
+    border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 800; letter-spacing: -0.02em;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(45,91,255,.32);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .float-cta.show { opacity: 1; pointer-events: auto; }
+  .float-cta:active { transform: translateX(-50%) scale(0.98); }
+
+  /* ===== Reveal animation ===== */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .hero-badge .dot::after { animation: none; }
+  }
 </style>
 </head>
 <body>
-<div class="lp-wrap">
+
+<header class="topbar">
+  <div class="brand">JJH<span>·</span>보험점검</div>
+  <a class="small-cta" href="#consult">무료 신청</a>
+</header>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="hero-badge"><span class="pulse"></span> 무료 보험점검</div>
+  <div class="hero-badge"><span class="dot"></span> 무료 보험점검</div>
   <h1>
-    <span class="line">가입만 하고</span>
-    <span class="line">끝난 보험,</span>
-    <span class="line"><span class="grad">필요할 때 보험금</span></span>
-    <span class="line"><span class="grad">받을 수 있나요?</span></span>
+    가입만 하고 끝난 보험,<br>
+    정말 필요할 때<br>
+    <em>보험금 받을 수 있나요?</em>
   </h1>
-  <p class="hero-desc">
+  <p class="lead">
     보험은 들어놓는 게 중요한 게 아니라<br>
     아플 때 제대로 받는 게 중요합니다.
   </p>
-  <div class="hero-cta-wrap">
-    <button class="btn-hero js-scroll-to-form" type="button">
-      내 보험 무료로 점검받기
-      <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    </button>
-  </div>
+  <button class="btn-primary js-scroll-to-form" type="button">
+    내 보험 무료로 점검받기
+    <span class="arrow">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </button>
 </section>
 
 <!-- PROBLEM -->
-<section class="problem">
-  <div class="section-label reveal">CHECK</div>
-  <h2 class="reveal">
-    혹시 이런 상황,<br>
-    <span class="em">남의 일이라고 생각하셨나요?</span>
-  </h2>
-  <p class="sub-desc reveal">
-    보험에 가입해두고 안심하고 계신 분들이 많습니다.<br>
-    그런데 실제로는 이런 일이 생각보다 자주 일어납니다.
+<section class="section-alt">
+  <div class="eyebrow reveal">CHECK</div>
+  <h2 class="reveal">혹시 이런 상황,<br><em class="warn">남의 일이라고 생각하셨나요?</em></h2>
+  <p class="lead reveal">
+    보험에 가입해두고 안심하고 계신 분들이 많지만,<br>
+    실제로는 이런 일이 생각보다 자주 일어납니다.
   </p>
+
   <div class="stat-cards">
-    <div class="stat-card tilt-card">
+    <div class="stat-card c1 reveal">
       <div class="stat-top">
-        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FF6B4A" stroke-width="2"/><path d="M12 7v10M15 9.5c0-1.38-1.34-2.5-3-2.5s-3 1.12-3 2.5 1.34 2.5 3 2.5 3 1.12 3 2.5-1.34 2.5-3 2.5" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="stat-number"><span class="counter" data-target="11">0</span><span class="unit">조원</span></div>
+        <div class="stat-icon c1">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#E85A4F" stroke-width="2"/><path d="M12 7v10M15 9.5c0-1.4-1.34-2.5-3-2.5s-3 1.1-3 2.5 1.34 2.5 3 2.5 3 1.1 3 2.5-1.34 2.5-3 2.5" stroke="#E85A4F" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="stat-num"><span class="counter" data-target="11">0</span><span class="unit">조 원</span></div>
       </div>
       <h3>아무도 안 찾아간 보험금</h3>
       <p>청구할 수 있는 걸 몰라서, 귀찮아서, 그냥 넘어간 돈</p>
       <span class="stat-source">금융감독원, 2025</span>
     </div>
-    <div class="stat-card tilt-card">
+
+    <div class="stat-card c2 reveal">
       <div class="stat-top">
-        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="stat-number"><span class="counter" data-target="60">0</span><span class="unit">%</span></div>
+        <div class="stat-icon c2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="stat-num"><span class="counter" data-target="60">0</span><span class="unit">%</span></div>
       </div>
       <h3>5년도 못 채우고 해약</h3>
       <p>10명 중 6명. 보험료만 수백만 원 내고 아무것도 못 받음</p>
       <span class="stat-source">생명보험협회 공시, 2024</span>
     </div>
-    <div class="stat-card tilt-card">
+
+    <div class="stat-card c3 reveal">
       <div class="stat-top">
-        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 7l9-4 9 4" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(-3,0)"/></svg></div>
-        <div class="stat-number"><span class="counter" data-target="64">0</span><span class="unit">%</span></div>
+        <div class="stat-icon c3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9-4.03 9-9 9" stroke="#00A36E" stroke-width="2" stroke-linecap="round"/><path d="M9 12l2 2 4-4" stroke="#00A36E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="stat-num"><span class="counter" data-target="64">0</span><span class="unit">%</span></div>
       </div>
-      <h3>보험 싸움 10건 중 6건, "왜 안 줘?"</h3>
-      <p>청구했는데 안 주거나 깎인 경우. 준비를 어떻게 했느냐 차이</p>
+      <h3>보험 분쟁 10건 중 6건, "왜 안 줘?"</h3>
+      <p>청구했는데 거절되거나 깎인 경우. 준비를 어떻게 했느냐의 차이</p>
       <span class="stat-source">손해보험협회, 2025</span>
     </div>
   </div>
 </section>
 
 <!-- ROLE (DIFFERENCE) -->
-<section class="role">
-  <div class="role-glow role-glow-1"></div>
-  <div class="role-glow role-glow-2"></div>
-  <div class="section-label reveal">DIFFERENCE</div>
-  <h2 class="reveal">옆에서 봐주는 사람이<br>있고 없고의 차이</h2>
-  <p class="sub-desc reveal">
+<section>
+  <div class="eyebrow reveal">DIFFERENCE</div>
+  <h2 class="reveal">옆에서 봐주는 사람이<br><em>있고 없고의 차이</em></h2>
+  <p class="lead reveal">
     같은 보험이라도 관리하는 사람에 따라<br>
     받는 금액이 달라질 수 있습니다.
   </p>
-  <div class="compare-box compare-bad">
-    <div class="compare-label">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6 6l4 4M10 6l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      담당자 없이 혼자 관리할 때
+
+  <div class="compare">
+    <div class="compare-card bad reveal">
+      <div class="compare-label">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#94A3B8" stroke-width="1.5"/><path d="M6 6l4 4M10 6l-4 4" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/></svg>
+        담당자 없이 혼자 관리할 때
+      </div>
+      <ul class="compare-list">
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#CBD3DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          청구할 수 있는 상황인지 몰라서 그냥 넘어감
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#CBD3DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          서류 빠져서 보험금 일부만 받음
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#CBD3DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          보험료 부담돼서 결국 해약
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#CBD3DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          내 보험에 뭐가 보장되는지도 모름
+        </li>
+      </ul>
     </div>
-    <ul class="compare-list">
-      <li><span class="bullet"></span>청구할 수 있는 상황인지 몰라서 넘어감</li>
-      <li><span class="bullet"></span>서류 빠져서 보험금 깎임</li>
-      <li><span class="bullet"></span>보험료 부담돼서 결국 해약</li>
-      <li><span class="bullet"></span>내 보험에 뭐가 되는지도 모름</li>
-    </ul>
-  </div>
-  <div class="compare-box compare-good">
-    <div class="compare-label">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      전담 관리자가 함께할 때
+
+    <div class="compare-card good reveal">
+      <div class="compare-label">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#2D5BFF" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="#2D5BFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        전담 관리자가 함께할 때
+      </div>
+      <ul class="compare-list">
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          받을 수 있는 보험금을 빠짐없이 챙겨드립니다
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          유리한 방향으로 서류 준비를 도와드립니다
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          부담 안 되게 보험료 구조를 조정합니다
+        </li>
+        <li>
+          <svg class="ic" viewBox="0 0 20 20" fill="none"><path d="M5 10l3 3 7-7" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          정기적으로 보장 내용을 점검합니다
+        </li>
+      </ul>
     </div>
-    <ul class="compare-list">
-      <li><span class="bullet"></span>받을 수 있는 건 빠짐없이 챙겨드립니다</li>
-      <li><span class="bullet"></span>유리한 방향으로 서류 준비를 도와드립니다</li>
-      <li><span class="bullet"></span>부담 안 되게 보험료 구조를 조정합니다</li>
-      <li><span class="bullet"></span>정기적으로 보장 내용을 점검합니다</li>
-    </ul>
   </div>
 </section>
 
 <!-- EXPERT -->
-<section class="expert">
-  <div class="expert-label reveal">EXPERT</div>
-  <h2 class="reveal">평범한 상담사가<br>가지 않습니다.</h2>
-  <p class="sub-desc reveal">
+<section class="section-alt">
+  <div class="eyebrow reveal">EXPERT</div>
+  <h2 class="reveal">평범한 상담사가<br><em>가지 않습니다</em></h2>
+  <p class="lead reveal">
     보험금을 받아본 사람만이 받는 법을 압니다.<br>
     상담이 아니라, 실전 경험이 찾아갑니다.
   </p>
 
   <div class="expert-list">
     <div class="expert-item reveal">
-      <div class="expert-icon ic-claim">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#6C5CE7" stroke-width="2"/></svg>
+      <div class="expert-icon c1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#2D5BFF" stroke-width="2"/><path d="M8 12l3 3 5-5" stroke="#2D5BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div>
-        <strong>수많은 보상 청구 경험</strong>
+        <h4>수많은 보상 청구 경험</h4>
         <p>단순 서류 접수가 아닌, 실제 보험금을 받아낸 현장 경험</p>
       </div>
     </div>
 
     <div class="expert-item reveal">
-      <div class="expert-icon ic-dispute">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="expert-icon c2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#E85A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div>
-        <strong>실제 분쟁 사례 해결 능력</strong>
+        <h4>실제 분쟁 사례 해결 능력</h4>
         <p>보험사와의 분쟁에서 고객 편에 서서 끝까지 해결한 실전 이력</p>
       </div>
     </div>
 
     <div class="expert-item reveal">
-      <div class="expert-icon ic-pro">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 15l-2 5 2-2 2 2-2-5z" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9" r="6" stroke="#34D399" stroke-width="2"/></svg>
+      <div class="expert-icon c3">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 21h8M12 17v4M5 3h14l-2 11a4 4 0 01-4 3h-2a4 4 0 01-4-3L5 3z" stroke="#00A36E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div>
-        <strong>손해사정회사 전문위원 출신</strong>
+        <h4>손해사정회사 전문위원 출신</h4>
         <p>보험사 내부 논리를 꿰뚫는 전문 자격과 실무 경력</p>
       </div>
     </div>
 
     <div class="expert-item reveal">
-      <div class="expert-icon ic-media">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="15" rx="2" stroke="#A855F7" stroke-width="2"/><path d="M17 2l-5 5-5-5" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="expert-icon c4">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#7C3AED" stroke-width="2"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
       <div>
-        <strong>언론에 보도된 상담사</strong>
+        <h4>언론에 보도된 상담사</h4>
         <p>방송과 기사에서 검증된 전문성, 이름을 걸고 찾아갑니다</p>
       </div>
     </div>
   </div>
 
   <div class="expert-bottom reveal">
-    가입할 때가 아니라,<br><span>받아야 할 때 진짜 힘이 되는 사람</span>이 갑니다.
+    가입할 때가 아니라,<br>
+    <strong>받아야 할 때 진짜 힘이 되는 사람</strong>이 갑니다.
   </div>
 </section>
 
-<!-- CTA BOTTOM -->
-<section class="cta-bottom">
-  <div class="cta-bottom-glow"></div>
-  <div class="section-label reveal">START NOW</div>
-  <h2 class="reveal">지금 바로<br>확인해보세요</h2>
-  <p class="sub-desc reveal">5분이면 신청 끝. 비용은 없습니다.</p>
-  <button class="btn-hero reveal js-scroll-to-form" type="button">
+<!-- CTA STRIP -->
+<section class="cta-strip">
+  <div class="eyebrow reveal">START NOW</div>
+  <h2 class="reveal">지금 바로 <em>확인해 보세요</em></h2>
+  <p class="lead reveal">5분이면 신청 끝. 상담 비용은 없습니다.</p>
+  <button class="btn-primary reveal js-scroll-to-form" type="button">
     무료 보험점검 신청하기
-    <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span class="arrow">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
   </button>
 </section>
 
-
 <!-- CONSULT FORM -->
-<section class="consult-form" id="consult-form">
-  <div class="section-label reveal">FREE CHECK</div>
-  <h2 class="reveal">
-    아래 정보만 남겨주시면<br>
-    <span class="grad">전문가가 직접 연락드립니다</span>
-  </h2>
-  <p class="sub-desc reveal">상담 비용은 100% 무료입니다. 가입 강요는 절대 없습니다.</p>
-  <form onsubmit="event.preventDefault(); var btn=this.querySelector('.submit'); btn.textContent='접수 완료 ✓'; btn.disabled=true; alert('신청이 접수되었습니다. 24시간 이내에 연락드리겠습니다.');">
-    <div>
+<section id="consult">
+  <div class="eyebrow reveal">FREE CHECK</div>
+  <h2 class="reveal">아래 정보만 남겨주시면<br><em>전문가가 직접 연락드립니다</em></h2>
+  <p class="lead reveal">상담 비용은 100% 무료. 가입 강요는 절대 없습니다.</p>
+
+  <form id="consult-form-el" class="form-card" novalidate>
+    <div class="field">
       <label for="cf-name">이름</label>
-      <input id="cf-name" name="name" required placeholder="홍길동" />
+      <input id="cf-name" name="name" required placeholder="홍길동" autocomplete="name">
     </div>
     <div class="field-row">
-      <div>
+      <div class="field">
         <label for="cf-phone">연락처</label>
-        <input id="cf-phone" name="phone" type="tel" required placeholder="010-0000-0000" />
+        <input id="cf-phone" name="phone" type="tel" required placeholder="010-0000-0000" autocomplete="tel" inputmode="tel">
       </div>
-      <div>
+      <div class="field">
         <label for="cf-age">나이</label>
-        <input id="cf-age" name="age" type="number" min="0" placeholder="35" />
+        <input id="cf-age" name="age" type="number" min="0" placeholder="35" inputmode="numeric">
       </div>
     </div>
-    <div>
+    <div class="field">
       <label for="cf-topic">점검 받고 싶은 항목</label>
       <select id="cf-topic" name="topic">
         <option>전체 보험 점검</option>
@@ -1119,213 +578,161 @@ body, .lp-wrap {
         <option>보험금 청구 / 분쟁 상담</option>
       </select>
     </div>
-    <div>
-      <label for="cf-memo">남기실 말씀(선택)</label>
+    <div class="field">
+      <label for="cf-memo">남기실 말씀 (선택)</label>
       <textarea id="cf-memo" name="memo" placeholder="예) 평일 저녁 7시 이후 연락 가능합니다."></textarea>
     </div>
     <label class="consent">
-      <input type="checkbox" required />
-      <span>개인정보 수집·이용에 동의합니다. (상담 목적 외 사용하지 않으며 종료 후 안전하게 파기합니다.)</span>
-    <label class="consent">
-      <input type="checkbox" required />
-<span>유의사항</span>
- <p class="sub-desc reveal">■ 다음과 같은 경우 이벤트 참여가 제한되거나 불가능할 수 있습니다.<br>
-                               · 본인 또는 직계가족 중 보험설계사인 경우<br>
-                               · 보험 리모델링 의사가 전혀 없는 경우<br>
-                               · 미성년자, 대학생 등 고정 수입이 없는 경우<br>
-                               · 고령 또는 병력으로 인해 보험 가입이 어려운 경우<br>
-                               · 허위 정보 기입 또는 고의적 사실 은폐가 확인될 경우<br>
-                            ■ 혜택은 전문가 대면 상담을 완료하신 후 제공되며 전문가 상담 도중 고객의 요청으로 상담이 중단된 경우, 혜택 지급이 제한될 수 있습니다.<br>
-                            ■ 이벤트는 기간 내 1인 1회만 참여 가능하며, 가족당 1인만 참여할 수 있습니다.<br><p>
-                            ■ 신청 시 제공한 개인정보에 오류 또는 누락이 있는 경우 혜택 제공이 제한될 수 있습니다.<br>
-                            ■ 동일인이 명의 또는 정보를 변경하여 중복 참여한 사실이 확인될 경우, 모든 참여 및 혜택이 무효처리 됩니다.<br>
-                            ■ 고객의 귀책 사유(정보 오기재, 연락 불가, 상품 훼손, 분실 등)로 인해 혜택 수령이 불가능한 경우, 재발송 및 보상이 불가합니다.<br>
-                            ■ 해당 이벤트는 사정에 따라 사전 고지 없이 변경/종료될 수 있습니다.<br><p>
-    <button class="submit" type="submit">무료 점검 신청하기</button>
+      <input type="checkbox" id="cf-consent" required>
+      <span>개인정보 수집·이용에 동의합니다. (상담 목적 외 사용하지 않으며, 종료 후 안전하게 파기합니다.)</span>
+    </label>
+    <button class="submit-btn" type="submit">무료 점검 신청하기</button>
   </form>
 </section>
 
 <footer class="lp-footer">
-  
-
-  <strong> 개인정보책임관리자명: 박기성 </strong><br>
- pgs82785253@gmail.com 01082785253<br>
-  © <span id="cur-year"></span> bobobun. All rights reserved.
+  <strong>JJH 보험점검 센터</strong><br>
+  손해사정사 협력 · 전국 무료 상담 · 평일 09:00 ~ 21:00<br>
+  © <span id="cur-year"></span> JJH. All rights reserved.
 </footer>
 
 <button class="float-cta js-scroll-to-form" type="button">무료 보험점검 신청하기</button>
 
-</div><!-- /lp-wrap -->
-
 <script>
-document.body.classList.add('anim');
-const wrap = document.querySelector('.lp-wrap');
-if (wrap) wrap.classList.add('anim');
+  // ===== 부드러운 스크롤 =====
+  function smoothScrollTo(targetY, duration) {
+    var start = window.pageYOffset;
+    var distance = targetY - start;
+    var t0 = performance.now();
+    var d = duration || 600;
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function tick(now) {
+      var elapsed = now - t0;
+      var p = Math.min(elapsed / d, 1);
+      window.scrollTo(0, start + distance * ease(p));
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
 
-// ===== INTERSECTION OBSERVER =====
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const el = entry.target;
-    el.classList.add('visible');
+  document.querySelectorAll('.js-scroll-to-form').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var target = document.getElementById('consult');
+      if (!target) return;
+      var y = target.getBoundingClientRect().top + window.pageYOffset - 16;
+      smoothScrollTo(y, 600);
+    });
+  });
 
-    // Counter with burst + flash
-    if (el.classList.contains('stat-card')) {
-      const counter = el.querySelector('.counter');
-      if (counter && !counter.dataset.animated) {
-        counter.dataset.animated = 'true';
-        animateCounter(counter, () => {
-          counter.classList.add('burst');
-          el.classList.add('counted');
-        });
+  // ===== 스크롤 reveal =====
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if (entry.target.classList.contains('stat-card')) {
+          var counter = entry.target.querySelector('.counter');
+          if (counter && !counter.dataset.done) animateCounter(counter);
+        }
+        io.unobserve(entry.target);
       }
-    }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-    // Compare: dim bad when good appears
-    if (el.classList.contains('compare-good')) {
-      const bad = document.querySelector('.compare-bad');
-      if (bad) bad.classList.add('dimmed');
-      setTimeout(() => {
-        el.classList.add('items-revealed');
-        const items = el.querySelectorAll('.compare-list li');
-        items.forEach((li, i) => {
-          li.style.transitionDelay = `${i * 0.12}s`;
+  document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
+
+  // 카운터
+  function animateCounter(el) {
+    el.dataset.done = '1';
+    var target = parseInt(el.dataset.target, 10) || 0;
+    var dur = 1200;
+    var start = performance.now();
+    function step(now) {
+      var p = Math.min((now - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 4);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // 플로팅 CTA 표시
+  (function() {
+    var btn = document.querySelector('.float-cta');
+    var hero = document.querySelector('.hero');
+    var form = document.getElementById('consult');
+    if (!btn || !hero || !form) return;
+    function onScroll() {
+      var heroBottom = hero.getBoundingClientRect().bottom;
+      var formTop = form.getBoundingClientRect().top;
+      var vh = window.innerHeight;
+      if (heroBottom < 60 && formTop > vh - 120) btn.classList.add('show');
+      else btn.classList.remove('show');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // 연도
+  var yearEl = document.getElementById('cur-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ===== 연락처 자동 포맷 =====
+  var phoneEl = document.getElementById('cf-phone');
+  if (phoneEl) {
+    phoneEl.addEventListener('input', function() {
+      var d = this.value.replace(/\D/g, '').slice(0, 11);
+      if (d.length < 4) this.value = d;
+      else if (d.length < 8) this.value = d.slice(0, 3) + '-' + d.slice(3);
+      else this.value = d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+    });
+  }
+
+  // ===== Google Sheet 연동 =====
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbwMaylaeSmqVSlHw73Rpj0cMP2EgxMnnRlN0jmhzxcKIjG5BrKYJDS580i8dIt1b1Wk/exec';
+
+  var form = document.getElementById('consult-form-el');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      var name = (document.getElementById('cf-name').value || '').trim();
+      var phone = (document.getElementById('cf-phone').value || '').trim();
+      var consent = document.getElementById('cf-consent').checked;
+      if (!name) { alert('이름을 입력해 주세요.'); return; }
+      if (!phone || phone.replace(/\D/g, '').length < 9) { alert('연락처를 정확히 입력해 주세요.'); return; }
+      if (!consent) { alert('개인정보 수집·이용에 동의해 주세요.'); return; }
+
+      var btn = form.querySelector('.submit-btn');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '전송 중...';
+
+      try {
+        var fd = new FormData(form);
+        fd.append('source', location.search || location.href);
+        fd.append('ua', navigator.userAgent);
+
+        await fetch(GAS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams(fd)
         });
-      }, 400);
-    }
-  });
-}, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
 
-document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
-  observer.observe(el);
-});
-
-// ===== STAGGER DELAYS =====
-function addStagger(selector, baseDelay = 0) {
-  document.querySelectorAll(selector).forEach((el, i) => {
-    el.style.transitionDelay = `${baseDelay + i * 0.12}s`;
-  });
-}
-
-addStagger('.stat-card');
-
-// ===== COUNTER ANIMATION =====
-function animateCounter(el, onComplete) {
-  const target = parseInt(el.dataset.target);
-  const duration = 1400;
-  const start = performance.now();
-  function update(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 4);
-    el.textContent = Math.round(target * eased);
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    } else {
-      if (onComplete) onComplete();
-    }
+        btn.textContent = '접수 완료 ✓';
+        alert('신청이 정상 접수되었습니다.\n24시간 이내에 연락드리겠습니다.');
+        form.reset();
+        setTimeout(function() {
+          btn.disabled = false;
+          btn.textContent = original;
+        }, 4000);
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = original;
+        alert('전송 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.');
+      }
+    });
   }
-  requestAnimationFrame(update);
-}
-
-// ===== TILT EFFECT =====
-document.querySelectorAll('.tilt-card').forEach(card => {
-  card.addEventListener('pointermove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -3;
-    const rotateY = ((x - centerX) / centerX) * 3;
-    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
-  });
-  card.addEventListener('pointerleave', () => {
-    card.style.transform = '';
-  });
-});
-
-// ===== BUTTON RIPPLE =====
-document.querySelectorAll('.btn-hero').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    const rect = this.getBoundingClientRect();
-    const ripple = document.createElement('span');
-    const size = Math.max(rect.width, rect.height) * 2;
-    ripple.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);transform:scale(0);animation:btnRipple 0.6s linear;pointer-events:none;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;`;
-    this.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-  });
-});
-
-const style = document.createElement('style');
-style.textContent = '@keyframes btnRipple { to { transform: scale(1); opacity: 0; } }';
-document.head.appendChild(style);
-
-// ===== FALLBACK =====
-setTimeout(() => {
-  document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
-    if (!el.classList.contains('visible')) {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight + 100) el.classList.add('visible');
-    }
-  });
-}, 5000);
-
-// ===== CTA → 랜딩 페이지 끝을 뷰포트 최상단으로 (plink-manager/dbmaker 폼 노출) =====
-function bjSmoothScrollTo(win, targetY, duration) {
-  var doc, body;
-  try { doc = win.document.documentElement; body = win.document.body; } catch(e) { doc = null; body = null; }
-  var start = 0;
-  try { start = win.pageYOffset || (doc && doc.scrollTop) || (body && body.scrollTop) || 0; } catch(e) {}
-  var dist = targetY - start;
-  var t0 = Date.now();
-  var d = duration || 650;
-  function ease(t) { return 1 - Math.pow(1 - t, 3); }
-  function tick() {
-    var elapsed = Date.now() - t0;
-    var p = elapsed / d;
-    if (p > 1) p = 1;
-    var y = start + dist * ease(p);
-    try { win.scrollTo(0, y); } catch(e) {}
-    try { if (doc) doc.scrollTop = y; } catch(e) {}
-    try { if (body) body.scrollTop = y; } catch(e) {}
-    if (p < 1) setTimeout(tick, 16);
-  }
-  tick();
-}
-
-document.querySelectorAll('.js-scroll-to-form').forEach(function(btn) {
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    var target = document.getElementById('consult-form');
-    if (!target) return;
-    var rect = target.getBoundingClientRect();
-    var targetY = (window.pageYOffset || document.documentElement.scrollTop) + rect.top - 24;
-    bjSmoothScrollTo(window, targetY, 700);
-  });
-});
-
-
-// ===== FLOATING CTA visibility =====
-(function(){
-  var btn = document.querySelector('.float-cta');
-  var hero = document.querySelector('.hero');
-  var form = document.getElementById('consult-form');
-  if (!btn || !hero || !form) return;
-  function onScroll(){
-    var heroBottom = hero.getBoundingClientRect().bottom;
-    var formTop = form.getBoundingClientRect().top;
-    var vh = window.innerHeight;
-    if (heroBottom < 80 && formTop > vh - 120) btn.classList.add('show');
-    else btn.classList.remove('show');
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-})();
-var yearEl = document.getElementById('cur-year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
 </script>
-
 </body>
 </html>
