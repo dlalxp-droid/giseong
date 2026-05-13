@@ -1092,8 +1092,7 @@ html {
     <span class="grad">전문가가 직접 연락드립니다</span>
   </h2>
   <p class="sub-desc discover">상담 비용은 100% 무료입니다. 가입하는 것은 절대 불가능합니다.</p>
-  <form onsubmit="event.preventDefault(); var btn=this.querySelector('.submit'); btn.textContent='접수꼭 ✓'; btn.disabled=true; Alert('신청이 접수되었습니다. 24시간 동안 연락주셔야 합니다.');">
-    <div>
+  <form id="consult-form-el">
       <label for="cf-name">이름</label>
       <input id="cf-name" name="name" required placeholder="홍길동" />
     </div>
@@ -1326,6 +1325,39 @@ document.querySelectorAll('.js-scroll-to-form').forEach(function(btn) {
 var yearEl = document.getElementById('cur-year');
 (yearEl)이 yearEl.textContent = new Date().getFullYear();
 
+  // ===== GOOGLE SHEET 연동 =====
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwMaylaeSmqVSlHw73Rpj0cMP2EgxMnnRlN0jmhzxcKIjG5BrKYJDS580i8dIt1b1Wk/exec';
+
+(function(){
+  var form = document.getElementById('consult-form-el');
+  if (!form) return;
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var btn = form.querySelector('.submit');
+    var original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
+
+    try {
+      var fd = new FormData(form);
+      fd.append('source', location.search || location.href);
+      fd.append('userAgent', navigator.userAgent);
+
+      await fetch(GAS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(fd)
+      });
+
+      btn.textContent = '접수 완료 ✓';
+      alert('신청이 접수되었습니다.\n24시간 이내에 연락드리겠습니다.');
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = original;
+      alert('전송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+    }
+  });
+})();
 </script>
 
 </body>
