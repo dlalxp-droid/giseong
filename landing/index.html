@@ -1,475 +1,1331 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#0b2a5b" />
-<title>박기성 보험설계사 | 든든한 보상 전문가</title>
-<meta name="description" content="고객 한 분 한 분의 라이프스타일에 꼭 맞는 보장을 설계해 드립니다. 무료 보험 상담을 신청해 보세요." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-<style>
-  :root{
-    --primary:#0b2a5b;
-    --primary-2:#1746a2;
-    --accent:#f7c948;
-    --bg:#f5f7fb;
-    --card:#ffffff;
-    --text:#1b1f2a;
-    --muted:#5b6470;
-    --line:#e5e8ef;
-    --kakao:#fee500;
-    --kakao-ink:#191600;
-    --tel:#27c466;
-    --shadow:0 12px 32px rgba(15,32,72,.10);
-    --radius:18px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{
-    font-family:"Noto Sans KR","Apple SD Gothic Neo",system-ui,-apple-system,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    line-height:1.6;
-    padding-bottom:88px;
-  }
-  img{max-width:100%;display:block}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:560px;margin:0 auto;background:var(--bg)}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>보험점검 - 접수할 수 있는 인지, 지금 확인하세요</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<스타일>
+:루트 {
+  --bg: #0A0A0B;
+  --bg-card: #141416;
+  --bg-elevated: #1A1A1E;
+  --bg-hover: #222228;
+  --표면: #FAFAFA;
+  --기본 텍스트: #F5F5F7;
+  --text-secondary: rgba(245,245,247,0.7);
+  --text-tertiary: rgba(245,245,247,0.5);
+  --악센트: #6C5CE7;
+  --액센트 라이트: rgba(108,92,231,0.12);
+  --액센트 글로우: rgba(108,92,231,0.25);
+  --따뜻함: #FF6B4A;
+  --따뜻한 조명: rgba(255,107,74,0.1);
+  --성공: #34D399;
+  --success-light: rgba(52,211,153,0.1);
+  --border: rgba(255,255,255,0.1);
+  --border-hover: rgba(255,255,255,0.18);
+  --gradient-1: linear-gradient(135deg, #6C5CE7 0%, #A855F7 100%);
+  --gradient-2: linear-gradient(135deg, #FF6B4A 0%, #FF9A76 100%);
+  --gradient-3: linear-gradient(135deg, #34D399 0%, #6EE7B7 100%);
+}
 
-  /* Top bar */
-  .topbar{
-    position:sticky;top:0;z-index:30;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:12px 18px;background:rgba(255,255,255,.92);
-    backdrop-filter:saturate(180%) blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .brand{font-weight:900;color:var(--primary);letter-spacing:-.02em}
-  .brand small{font-weight:500;color:var(--muted);margin-left:6px}
-  .topbar .call{
-    font-size:13px;font-weight:700;color:#fff;background:var(--primary);
-    padding:8px 12px;border-radius:999px;
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* Hero */
-  .hero{
-    position:relative;color:#fff;padding:36px 22px 28px;
-    background:
-      radial-gradient(120% 80% at 0% 0%, rgba(247,201,72,.25), transparent 60%),
-      radial-gradient(120% 80% at 100% 100%, rgba(23,70,162,.6), transparent 60%),
-      linear-gradient(160deg,#0b2a5b 0%, #143a85 60%, #1746a2 100%);
-    overflow:hidden;
-  }
-  .hero::before{
-    content:"";position:absolute;inset:auto -40px -60px auto;
-    width:240px;height:240px;border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 60%);
-  }
-  .badge{
-    display:inline-block;font-size:12px;font-weight:700;
-    color:var(--accent);background:rgba(247,201,72,.12);
-    border:1px solid rgba(247,201,72,.45);
-    padding:6px 12px;border-radius:999px;letter-spacing:.02em;
-  }
-  .hero h1{
-    margin:14px 0 8px;font-size:28px;line-height:1.3;
-    letter-spacing:-.03em;font-weight:900;
-  }
-  .hero h1 b{color:var(--accent)}
-  .hero p{margin:0;color:#d9e2f4;font-size:15px}
-  .profile{
-    margin-top:22px;display:flex;align-items:center;gap:14px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.14);
-    padding:14px;border-radius:16px;
-  }
-  .avatar{
-    width:64px;height:64px;border-radius:50%;
-    background:linear-gradient(135deg,#f7c948,#ffe9a3);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--primary);font-weight:900;font-size:22px;
-    box-shadow:0 4px 14px rgba(0,0,0,.25);
-    flex:0 0 64px;
-  }
-  .who{font-size:14px;color:#cfd8ee}
-  .who strong{display:block;color:#fff;font-size:17px;margin-bottom:2px}
-  .cta-row{display:flex;gap:10px;margin-top:22px}
-  .btn{
-    flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    padding:14px 16px;border-radius:14px;font-weight:800;font-size:15px;
-    border:0;cursor:pointer;letter-spacing:-.01em;
-  }
-  .btn-kakao{background:var(--kakao);color:var(--kakao-ink)}
-  .btn-tel{background:var(--tel);color:#fff}
-  .btn-ghost{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.25)}
+html {
+  스크롤 동작: 부드러움;
+  -webkit-text-size-adjust: 100%;
+}
 
-  /* Section */
-  section{padding:34px 22px}
-  .eyebrow{
-    color:var(--primary-2);font-weight:800;font-size:12px;
-    letter-spacing:.18em;text-transform:uppercase;
-  }
-  h2{
-    margin:6px 0 18px;font-size:22px;line-height:1.35;
-    letter-spacing:-.03em;font-weight:900;color:var(--primary);
-  }
-  h2 b{color:var(--primary-2)}
-  .lead{color:var(--muted);font-size:15px;margin:0 0 8px}
+본문, .lp-wrap {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  배경: var(--bg);
+  색상: var(--text-primary);
+  최대 너비: 480px;
+  여백: 0 자동;
+  overflow-x: 숨김;
+  -webkit-font-smoothing: 앤티앨리어싱;
+  글자 간격: -0.02em;
+  단어 구분: 전체 유지;
+  위치: 상대적;
+}
 
-  /* Stats */
-  .stats{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
-    background:var(--card);border-radius:var(--radius);padding:18px;
-    box-shadow:var(--shadow);margin-top:-24px;position:relative;z-index:2;
-  }
-  .stat{text-align:center}
-  .stat .n{
-    font-size:22px;font-weight:900;color:var(--primary);letter-spacing:-.02em;
-  }
-  .stat .n small{font-size:12px;color:var(--muted);font-weight:600;margin-left:2px}
-  .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
 
-  /* Service cards */
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .card{
-    background:var(--card);border-radius:var(--radius);
-    padding:18px 16px;box-shadow:var(--shadow);
-    border:1px solid var(--line);
-  }
-  .card .ico{
-    width:42px;height:42px;border-radius:12px;display:flex;
-    align-items:center;justify-content:center;font-size:22px;
-    background:linear-gradient(135deg,#eaf0ff,#f6f9ff);
-    color:var(--primary);margin-bottom:10px;
-  }
-  .card h3{margin:0 0 4px;font-size:15px;letter-spacing:-.02em}
-  .card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5}
+/* ===== 영웅 ===== */
+.영웅 {
+  패딩: 80px 28px 60px;
+  표시: 플렉스;
+  플렉스 방향: 컬럼;
+  콘텐츠 정렬: 가운데 정렬;
+  위치: 상대적;
+  오버플로우: 숨김;
+}
 
-  /* Why list */
-  .why{background:#fff;border-radius:var(--radius);padding:6px 8px;box-shadow:var(--shadow)}
-  .why li{
-    list-style:none;display:flex;gap:14px;align-items:flex-start;
-    padding:16px 14px;border-bottom:1px solid var(--line);
-  }
-  .why li:last-child{border-bottom:0}
-  .why .num{
-    flex:0 0 32px;height:32px;border-radius:10px;
-    background:var(--primary);color:#fff;font-weight:800;
-    display:flex;align-items:center;justify-content:center;font-size:14px;
-  }
-  .why h4{margin:0 0 2px;font-size:15px;letter-spacing:-.02em}
-  .why p{margin:0;font-size:13px;color:var(--muted)}
+.히어로-오브 {
+  위치: 절대값;
+  테두리 반경: 50%;
+  필터: 흐림(80px);
+  변화할 것이다: 변환하다;
+  애니메이션: orbFloat 12초 ease-in-out 무한대;
+}
 
-  /* Reviews */
-  .reviews{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
-  .reviews::-webkit-scrollbar{display:none}
-  .review{
-    flex:0 0 84%;scroll-snap-align:start;
-    background:#fff;border-radius:var(--radius);
-    padding:18px;box-shadow:var(--shadow);border:1px solid var(--line);
-  }
-  .stars{color:#f5a623;letter-spacing:2px;font-size:14px;margin-bottom:6px}
-  .review p{margin:0 0 10px;font-size:14px;color:#2a2f3a}
-  .review .who2{font-size:12px;color:var(--muted)}
+.히어로-오브-1 {
+  너비: 280px; 높이: 280px;
+  배경: rgba(108,92,231,0.15);
+  위쪽: 10%; 오른쪽: -20%;
+}
 
-  /* Form */
-  .form{background:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-  .form label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px;font-weight:600}
-  .form input,.form select,.form textarea{
-    width:100%;padding:13px 14px;border:1px solid var(--line);
-    border-radius:12px;font:inherit;background:#fafbfd;color:var(--text);
-  }
-  .form textarea{min-height:90px;resize:vertical}
-  .form .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .check{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);margin-top:14px}
-  .check input{width:auto;margin-top:3px}
-  .submit{
-    margin-top:14px;width:100%;padding:15px;border:0;border-radius:14px;
-    background:linear-gradient(135deg,var(--primary),var(--primary-2));
-    color:#fff;font-weight:800;font-size:16px;letter-spacing:-.01em;cursor:pointer;
-    box-shadow:0 10px 24px rgba(11,42,91,.30);
-  }
+.히어로-오브-2 {
+  너비: 200px; 높이: 200px;
+  배경: rgba(255,107,74,0.08);
+  하단: 15%; 왼쪽: -15%;
+  애니메이션 지연: -4초;
+}
 
-  /* FAQ */
-  details{
-    background:#fff;border-radius:14px;padding:14px 16px;
-    box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:10px;
-  }
-  details summary{
-    list-style:none;cursor:pointer;font-weight:700;font-size:15px;
-    display:flex;justify-content:space-between;align-items:center;letter-spacing:-.02em;
-  }
-  details summary::-webkit-details-marker{display:none}
-  details summary::after{content:"+";color:var(--primary-2);font-weight:900;font-size:20px}
-  details[open] summary::after{content:"−"}
-  details p{margin:10px 0 0;font-size:14px;color:var(--muted);line-height:1.7}
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -20px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(0.95); }
+}
 
-  /* Footer */
-  footer{
-    padding:30px 22px 24px;text-align:center;color:var(--muted);font-size:12px;
-  }
-  footer .logo{font-weight:900;color:var(--primary);margin-bottom:8px}
+.히어로 배지 {
+  표시: 인라인-플렉스;
+  항목 정렬: 가운데 정렬;
+  간격: 8px;
+  배경: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.2);
+  패딩: 8px 16px;
+  테두리 반경: 100px;
+  글꼴 크기: 12px;
+  색상: #A78BFA;
+  글꼴 두께: 600;
+  하단 여백: 32px;
+  너비: 콘텐츠에 맞춤;
+  글자 간격: 0.02em;
+  배경 필터: 흐림(10px);
+  불투명도: 0; 변환: translateY(20px);
+  애니메이션: revealUp 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+}
 
-  /* Floating bottom bar */
-  .floatbar{
-    position:fixed;left:0;right:0;bottom:0;z-index:40;
-    max-width:560px;margin:0 auto;display:flex;gap:8px;padding:10px 12px;
-    background:rgba(255,255,255,.95);border-top:1px solid var(--line);
-    backdrop-filter:blur(8px);
-  }
-  .floatbar a{
-    flex:1;text-align:center;font-weight:800;font-size:14px;
-    padding:13px 8px;border-radius:12px;
-  }
-  .fb-call{background:var(--tel);color:#fff}
-  .fb-kakao{background:var(--kakao);color:var(--kakao-ink)}
-  .fb-form{background:var(--primary);color:#fff}
+.히어로 배지 .펄스 {
+  너비: 6px; 높이: 6px;
+  배경: var(--accent);
+  테두리 반경: 50%;
+  위치: 상대적;
+}
 
-  @media (min-width:600px){
-    body{padding-bottom:0}
-    .floatbar{position:static;border:0;background:transparent;padding:0;margin-top:18px}
-  }
+.히어로 배지 .펄스::애프터 {
+  콘텐츠: '';
+  위치: 절대값;
+  삽입: -4px;
+  테두리 반경: 50%;
+  테두리: 1.5px 솔리드 var(--accent);
+  애니메이션: pulseRing 2초 완화 무한대;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.히어로 h1 {
+  글꼴 크기: 36px;
+  글꼴 두께: 800;
+  줄 높이: 1.35;
+  색상: var(--text-primary);
+  하단 여백: 20px;
+  위치: 상대적;
+  z-인덱스: 1;
+  글자 간격: -0.04em;
+}
+
+.히어로 h1 .라인 {
+  표시: 블록;
+  불투명도: 0;
+  변환: translateY(40px);
+  애니메이션: revealUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.hero h1 .line:nth-child(1) { animation-delay: 0.3s; }
+.hero h1 .line:nth-child(2) { animation-delay: 0.4s; }
+.hero h1 .line:nth-child(3) { animation-delay: 0.5s; }
+.hero h1 .line:nth-child(4) { animation-delay: 0.6s; }
+
+.히어로 h1 .grad {
+  배경: var(--gradient-1);
+  -webkit-background-clip: 텍스트;
+  -webkit-text-fill-color: 투명;
+  background-clip: 텍스트;
+}
+
+.히어로-설명 {
+  글꼴 크기: 15px;
+  줄 높이: 1.75;
+  색상: var(--text-secondary);
+  글꼴 두께: 400;
+  글자 간격: -0.01em;
+  불투명도: 0; 변환: translateY(30px);
+  애니메이션: revealUp 0.8s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  위치: 상대적; z-인덱스: 1;
+}
+
+.hero-cta-wrap {
+  상단 여백: 40px;
+  불투명도: 0; 변환: translateY(30px);
+  애니메이션: revealUp 0.8s 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+  위치: 상대적; z-인덱스: 1;
+}
+
+.btn-hero {
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  콘텐츠 정렬: 가운데 정렬;
+  간격: 10px;
+  너비: 100%;
+  패딩: 18px 24px;
+  배경: var(--gradient-1);
+  색상: #fff;
+  테두리: 없음;
+  테두리 반경: 16px;
+  글꼴 크기: 16px;
+  글꼴 두께: 700;
+  커서: 포인터;
+  글꼴 패밀리: 상속됨;
+  글자 간격: -0.02em;
+  위치: 상대적;
+  오버플로우: 숨김;
+  전환: 변환 0.2초, 박스 그림자 0.3초;
+  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
+}
+
+.btn-hero:active { transform: scale(0.97); }
+
+.btn-hero::after {
+  콘텐츠: '';
+  위치: 절대값;
+  삽입: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+  변환: translateX(-100%);
+  애니메이션: 광택 4초 1.5초 무한대;
+}
+
+@keyframes 광택 {
+  0% { transform: translateX(-100%); }
+  20% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.btn-arrow {
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  콘텐츠 정렬: 가운데 정렬;
+  너비: 28px; 높이: 28px;
+  배경: rgba(255,255,255,0.15);
+  테두리 반경: 8px;
+  전환: 변환 0.3초;
+}
+
+@keyframes revealUp {
+  { 불투명도: 1; 변환: translateY(0); }로
+}
+
+@keyframes fadeIn {
+  { 불투명도: 1; }로
+}
+
+/* ===== 전문가용 ===== */
+.전문가 {
+  패딩: 48px 28px 56px;
+  위치: 상대적;
+}
+
+.expert-label {
+  표시: 인라인-플렉스;
+  항목 정렬: 가운데 정렬;
+  간격: 8px;
+  글꼴 크기: 11px;
+  글꼴 두께: 700;
+  색상: var(--따뜻함);
+  텍스트 변환: 대문자;
+  글자 간격: 0.1em;
+  하단 여백: 16px;
+}
+
+.전문가 h2 {
+  글꼴 크기: 26px;
+  글꼴 두께: 800;
+  줄 높이: 1.4;
+  글자 간격: -0.03em;
+  하단 여백: 10px;
+}
+
+.expert .sub-desc {
+  글꼴 크기: 14px;
+  줄 높이: 1.7;
+  색상: var(--text-secondary);
+  하단 여백: 32px;
+}
+
+.전문가 목록 {
+  표시: 플렉스;
+  플렉스 방향: 컬럼;
+  간격: 14px;
+}
+
+.expert-item {
+  표시: 플렉스;
+  정렬 항목: flex-start;
+  간격: 16px;
+  패딩: 20px 18px;
+  배경: var(--bg-card);
+  테두리: 1px 솔리드 var(--border);
+  테두리 반경: 16px;
+  전환: 테두리 색상 0.3초, 변환 0.3초;
+}
+
+.expert-item:hover {
+  테두리 색상: var(--border-hover);
+  변환: translateY(-2px);
+}
+
+.expert-icon {
+  플렉스-슈링크: 0;
+  너비: 44px;
+  높이: 44px;
+  테두리 반경: 12px;
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  콘텐츠 정렬: 가운데 정렬;
+}
+
+.expert-icon.ic-claim { background: var(--accent-light); }
+.expert-icon.ic-dispute { background: var(--warm-light); }
+.expert-icon.ic-pro { background: var(--success-light); }
+.expert-icon.ic-media { background: rgba(168,85,247,0.1); }
+
+.expert-item strong {
+  표시: 블록;
+  글꼴 크기: 15px;
+  글꼴 두께: 700;
+  글자 간격: -0.02em;
+  하단 여백: 5px;
+  색상: var(--text-primary);
+}
+
+.expert-item p {
+  여백: 0;
+  글꼴 크기: 13px;
+  줄 높이: 1.6;
+  색상: var(--text-tertiary);
+}
+
+.expert-bottom {
+  상단 여백: 28px;
+  패딩: 22px 20px;
+  배경: 선형 기울기(135도, rgba(108,92,231,0.08) 0%, rgba(255,107,74,0.06) 100%);
+  border: 1px solid rgba(108,92,231,0.15);
+  테두리 반경: 16px;
+  텍스트 정렬: 가운데 정렬;
+  글꼴 크기: 15px;
+  글꼴 두께: 600;
+  줄 높이: 1.65;
+  색상: var(--text-secondary);
+  글자 간격: -0.02em;
+}
+
+.expert-bottom span {
+  색상: #A78BFA;
+  글꼴 두께: 700;
+}
+
+/* ===== 공통 섹션 ===== */
+.섹션-레이블 {
+  표시: 인라인-플렉스;
+  항목 정렬: 가운데 정렬;
+  간격: 8px;
+  글꼴 크기: 11px;
+  글꼴 두께: 700;
+  색상: var(--accent);
+  텍스트 변환: 대문자;
+  글자 간격: 0.1em;
+  하단 여백: 16px;
+}
+
+.section-label::before {
+  콘텐츠: '';
+  너비: 16px; 높이: 1.5px;
+  배경: var(--accent);
+  테두리 반경: 2px;
+}
+
+/* ===== 문제점 ===== */
+.문제 {
+  패딩: 80px 24px;
+  배경: var(--bg);
+}
+
+.문제 h2 {
+  글꼴 크기: 26px;
+  글꼴 두께: 800;
+  줄 높이: 1.4;
+  색상: var(--text-primary);
+  하단 여백: 12px;
+  글자 간격: -0.03em;
+}
+
+.문제 h2 .em {
+  배경: var(--gradient-2);
+  -webkit-background-clip: 텍스트;
+  -webkit-text-fill-color: 투명;
+  background-clip: 텍스트;
+}
+
+.문제 > .하위 설명 {
+  글꼴 크기: 14px;
+  줄 높이: 1.7;
+  색상: var(--text-secondary);
+  하단 여백: 36px;
+}
+
+.stat-cards {
+  표시: 플렉스;
+  플렉스 방향: 컬럼;
+  간격: 12px;
+}
+
+.stat-card {
+  배경: var(--bg-card);
+  테두리 반경: 20px;
+  패딩: 24px 22px;
+  위치: 상대적;
+  오버플로우: 숨김;
+  테두리: 1px 솔리드 var(--border);
+  전환: 테두리 색상 0.4초, 변환 0.4초;
+}
+
+.stat-card:hover {
+  테두리 색상: var(--border-hover);
+  변환: translateY(-2px);
+}
+
+.anim .stat-card {
+  불투명도: 0;
+  transform: translateY(50px) scale(0.95);
+  전환: 모든 0.7초 입방 베지어(0.16, 1, 0.3, 1);
+}
+
+.anim .stat-card.visible {
+  불투명도: 1;
+  변환: translateY(0) scale(1);
+}
+
+.stat-card::before {
+  콘텐츠: '';
+  위치: 절대값;
+  삽입: 0;
+  테두리 반경: 20px;
+  불투명도: 0;
+  전환: 불투명도 0.6초;
+  포인터 이벤트: 없음;
+  z-인덱스: 0;
+}
+
+.stat-card:nth-child(1)::before { background: radial-gradient(ellipse at 80% 20%, rgba(255,107,74,0.15) 0%, transparent 60%); }
+.stat-card:nth-child(2)::before { background: radial-gradient(ellipse at 80% 20%, rgba(108,92,231,0.15) 0%, transparent 60%); }
+.stat-card:nth-child(3)::before { background: radial-gradient(ellipse at 80% 20%, rgba(52,211,153,0.15) 0%, transparent 60%); }
+
+.stat-card.counted::before {
+  불투명도: 1;
+  애니메이션: flashGlow 1.2초 이지아웃;
+}
+
+@keyframes flashGlow {
+  0% { 불투명도: 0; }
+  30% { 불투명도: 1; }
+  100% { 불투명도: 0.4; }
+}
+
+.stat-card::after {
+  콘텐츠: '';
+  위치: 절대값;
+  상단: 0; 오른쪽: 0;
+  너비: 120px; 높이: 120px;
+  테두리 반경: 50%;
+  필터: 흐림(50px);
+  불투명도: 0.4;
+  포인터 이벤트: 없음;
+}
+
+.stat-card:nth-child(1)::after { background: rgba(255,107,74,0.12); }
+.stat-card:nth-child(2)::after { background: rgba(108,92,231,0.12); }
+.stat-card:nth-child(3)::after { background: rgba(52,211,153,0.12); }
+
+.stat-top {
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  justify-content: space-between;
+  하단 여백: 16px;
+  위치: 상대적;
+  z-인덱스: 1;
+}
+
+.stat-card .icon {
+  너비: 44px; 높이: 44px;
+  테두리 반경: 12px;
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  콘텐츠 정렬: 가운데 정렬;
+}
+
+.stat-card:nth-child(1) .icon { background: var(--warm-light); }
+.stat-card:nth-child(2) .icon { background: var(--accent-light); }
+.stat-card:nth-child(3) .icon { background: var(--success-light); }
+
+.stat-number {
+  글꼴 크기: 40px;
+  글꼴 두께: 900;
+  줄 높이: 1;
+  글자 간격: -0.05em;
+  위치: 상대적;
+  z-인덱스: 1;
+}
+
+.stat-card:nth-child(1) .stat-number { color: var(--warm); }
+.stat-card:nth-child(2) .stat-number { color: var(--accent); }
+.stat-card:nth-child(3) .stat-number { color: var(--success); }
+
+.stat-number .unit {
+  글꼴 크기: 18px;
+  글꼴 두께: 700;
+}
+
+.카운터 {
+  표시: 인라인 블록;
+  전환: 0.3초 cubic-bezier(0.34, 1.56, 0.64, 1) 변환;
+}
+
+.카운터.버스트 {
+  애니메이션: counterBurst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes counterBurst {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.stat-card h3 {
+  글꼴 크기: 16px;
+  글꼴 두께: 700;
+  하단 여백: 6px;
+  색상: var(--text-primary);
+  글자 간격: -0.02em;
+  위치: 상대적;
+  z-인덱스: 1;
+}
+
+.stat-card p {
+  글꼴 크기: 13px;
+  줄 높이: 1.65;
+  색상: var(--text-secondary);
+  위치: 상대적;
+  z-인덱스: 1;
+}
+
+.stat-source {
+  표시: 블록;
+  상단 여백: 10px;
+  글꼴 크기: 11px;
+  색상: var(--text-secondary);
+  위치: 상대적;
+  z-인덱스: 1;
+}
+
+/* ===== 역할 ===== */
+.역할 {
+  패딩: 80px 24px;
+  배경: var(--bg-card);
+  border-top: 1px 솔리드 var(--border);
+  border-bottom: 1px 솔리드 var(--border);
+  위치: 상대적;
+  오버플로우: 숨김;
+}
+
+.role-glow {
+  위치: 절대값;
+  너비: 300px; 높이: 300px;
+  테두리 반경: 50%;
+  필터: 흐림(100px);
+  포인터 이벤트: 없음;
+}
+
+.role-glow-1 {
+  상단: -100px; 오른쪽: -100px;
+  배경: rgba(108,92,231,0.06);
+}
+
+.role-glow-2 {
+  하단: -80px; 왼쪽: -80px;
+  배경: rgba(52,211,153,0.04);
+}
+
+.role h2 {
+  글꼴 크기: 26px;
+  글꼴 두께: 800;
+  줄 높이: 1.4;
+  색상: var(--text-primary);
+  하단 여백: 12px;
+  글자 간격: -0.03em;
+}
+
+.역할 > .하위 설명 {
+  글꼴 크기: 14px;
+  줄 높이: 1.7;
+  색상: var(--text-secondary);
+  하단 여백: 36px;
+}
+
+.compare-box {
+  테두리 반경: 20px;
+  오버플로우: 숨김;
+  하단 여백: 12px;
+}
+
+.anim .compare-box {
+  불투명도: 0;
+  전환: 모든 0.7초 입방 베지어(0.16, 1, 0.3, 1);
+}
+
+.anim .compare-bad {
+  변환: translateY(30px);
+}
+
+.anim .compare-good {
+  transform: translateY(50px) scale(0.95);
+  전환 지연: 0.2초;
+  전환 시간: 0.8초;
+}
+
+.anim .compare-bad.visible,
+.anim .compare-good.visible {
+  불투명도: 1;
+  변환: translateY(0) scale(1);
+}
+
+.compare-bad {
+  배경: var(--bg-elevated);
+  테두리: 1px 솔리드 var(--border);
+  패딩: 24px 22px;
+  테두리 반경: 20px;
+  하단 여백: 12px;
+  전환: 불투명도 0.6초, 필터 0.6초, 변환 0.6초;
+}
+
+.compare-bad.dimmed {
+  불투명도: 0.7;
+  변환: 스케일(0.98);
+}
+
+.compare-good {
+  배경: var(--accent-light);
+  border: 1px solid rgba(108,92,231,0.2);
+  패딩: 24px 22px;
+  테두리 반경: 20px;
+  위치: 상대적;
+  오버플로우: 숨김;
+}
+
+.compare-good::before {
+  콘텐츠: '';
+  위치: 절대값;
+  상단: -50px; 오른쪽: -50px;
+  너비: 150px; 높이: 150px;
+  background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%);
+  포인터 이벤트: 없음;
+}
+
+.compare-label {
+  글꼴 크기: 12px;
+  글꼴 두께: 700;
+  하단 여백: 16px;
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  간격: 8px;
+}
+
+.compare-bad .compare-label { color: var(--text-secondary); }
+.compare-good .compare-label { color: #A78BFA; }
+
+.compare-list {
+  리스트 스타일: 없음;
+  표시: 플렉스;
+  플렉스 방향: 컬럼;
+  간격: 10px;
+}
+
+.compare-list li {
+  글꼴 크기: 13.5px;
+  줄 높이: 1.6;
+  표시: 플렉스;
+  정렬 항목: flex-start;
+  간격: 10px;
+}
+
+.compare-bad .compare-list li { color: var(--text-primary); opacity: 0.75; }
+
+.compare-good .compare-list li {
+  색상: var(--text-primary);
+  글꼴 두께: 600;
+}
+
+.compare-list .bullet {
+  플렉스-슈링크: 0;
+  상단 여백: 7px;
+  너비: 4px; 높이: 4px;
+  테두리 반경: 50%;
+}
+
+.compare-bad .compare-list .bullet { background: var(--text-secondary); }
+
+.compare-good .compare-list li {
+  불투명도: 0;
+  변환: translateX(-16px);
+  전환: 모든 0.5초 입방 베지어(0.16, 1, 0.3, 1);
+}
+
+.compare-good.items-revealed .compare-list li {
+  불투명도: 1;
+  변환: translateX(0);
+}
+
+.compare-good .compare-list .bullet {
+  너비: 16px; 높이: 16px;
+  테두리 반경: 4px;
+  배경: rgba(108,92,231,0.15);
+  표시: 플렉스;
+  항목 정렬: 가운데 정렬;
+  콘텐츠 정렬: 가운데 정렬;
+  상단 여백: 3px;
+  위치: 상대적;
+  플렉스-슈링크: 0;
+}
+
+.compare-good .compare-list .bullet::after {
+  콘텐츠: '';
+  너비: 6px; 높이: 3px;
+  border-left: 1.5px solid #A78BFA;
+  border-bottom: 1.5px solid #A78BFA;
+  변환: 회전(-45도) 스케일(0);
+  전환: 0.3초 cubic-bezier(0.34, 1.56, 0.64, 1) 변환;
+  상단 여백: -1px;
+}
+
+.compare-good.items-revealed .compare-list .bullet::after {
+  변환: 회전(-45도) 스케일(1);
+}
+
+/* ===== CTA 하단 ===== */
+.cta-bottom {
+  패딩: 60px 24px 80px;
+  배경: var(--bg-card);
+  border-top: 1px 솔리드 var(--border);
+  텍스트 정렬: 가운데 정렬;
+  위치: 상대적;
+  오버플로우: 숨김;
+}
+
+.cta-bottom-glow {
+  위치: 절대값;
+  위쪽: 50%; 왼쪽: 50%;
+  변환: 변환(-50%, -50%);
+  너비: 300px; 높이: 300px;
+  background: radial-gradient(circle, rgba(108,92,231,0.08) 0%, transparent 70%);
+  포인터 이벤트: 없음;
+}
+
+.cta-bottom h2 {
+  글꼴 크기: 24px;
+  글꼴 두께: 800;
+  줄 높이: 1.4;
+  하단 여백: 12px;
+  글자 간격: -0.03em;
+  위치: 상대적;
+}
+
+.cta-bottom .sub-desc {
+  글꼴 크기: 14px;
+  색상: var(--text-secondary);
+  줄 높이: 1.7;
+  하단 여백: 32px;
+  위치: 상대적;
+}
+
+/* ===== 스크롤 공통 ===== */
+.anim .reveal {
+  불투명도: 0;
+  변환: translateY(28px);
+  전환: 모든 0.7초 입방 베지어(0.16, 1, 0.3, 1);
+}
+
+.anim .reveal.visible {
+  불투명도: 1;
+  변환: translateY(0);
+}
+
+.틸트카드 {
+  전환: 0.15초 완화 변환;
+}
+
+/* ===== 상담 양식 ===== */
+.상담 양식 {
+  패딩: 60px 24px 80px;
+  배경: var(--bg);
+  border-top: 1px 솔리드 var(--border);
+}
+.상담 양식 h2 {
+  글꼴 크기: 24px;
+  글꼴 두께: 800;
+  줄 높이: 1.4;
+  글자 간격: -0.03em;
+  하단 여백: 10px;
+}
+.consult-form h2 .grad {
+  배경: var(--gradient-1);
+  -webkit-background-clip: 텍스트;
+  -webkit-text-fill-color: 투명;
+  background-clip: 텍스트;
+}
+.consult-form .sub-desc {
+  글꼴 크기: 14px;
+  색상: var(--text-secondary);
+  줄 높이: 1.7;
+  하단 여백: 28px;
+}
+.상담 양식 양식 {
+  배경: var(--bg-card);
+  테두리: 1px 솔리드 var(--border);
+  테두리 반경: 20px;
+  패딩: 24px 20px;
+  표시: 플렉스;
+  플렉스 방향: 컬럼;
+  간격: 14px;
+}
+.상담 양식 레이블 {
+  표시: 블록;
+  글꼴 크기: 12px;
+  색상: var(--text-tertiary);
+  하단 여백: 6px;
+  글자 간격: 0.02em;
+  글꼴 두께: 600;
+}
+.상담 양식 입력,
+.상담 양식 선택,
+.consult-form 텍스트 영역 {
+  너비: 100%;
+  패딩: 14px 16px;
+  배경: var(--bg-elevated);
+  테두리: 1px 솔리드 var(--border);
+  테두리 반경: 12px;
+  색상: var(--text-primary);
+  글꼴 패밀리: 상속됨;
+  글꼴 크기: 15px;
+  글자 간격: -0.01em;
+  전환: 테두리 색상 0.2초, 배경 0.2초;
+}
+.consult-form 입력::placeholder,
+.consult-form textarea::placeholder { color: var(--text-tertiary); }
+.consult-form 입력:focus,
+.consult-form select:focus,
+.consult-form 텍스트 영역:focus {
+  개요: 없음;
+  테두리 색상: var(--accent);
+  배경: var(--bg-hover);
+}
+.consult-form 텍스트 영역 { 최소 높이: 88px; 크기 조정: 세로; }
+.consult-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.동의 {
+  표시: 플렉스;
+  정렬 항목: flex-start;
+  간격: 10px;
+  글꼴 크기: 12px;
+  색상: var(--text-tertiary);
+  줄 높이: 1.55;
+  상단 여백: 4px;
+}
+.consent 입력 필드 { 너비: 자동; 패딩: 0; 상단 여백: 2px; 강조 색상: var(--accent); }
+.consult-form .submit {
+  상단 여백: 8px;
+  너비: 100%;
+  패딩: 18px 24px;
+  배경: var(--gradient-1);
+  테두리: 없음;
+  테두리 반경: 16px;
+  색상: #fff;
+  글꼴 크기: 16px;
+  글꼴 두께: 700;
+  글자 간격: -0.02em;
+  커서: 포인터;
+  글꼴 패밀리: 상속됨;
+  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
+  전환: 변환 0.15초;
+}
+.consult-form .submit:active { transform: scale(0.98); }
+
+/* ===== 바닥글 ===== */
+.lp-footer {
+  패딩: 28px 24px 40px;
+  글꼴 크기: 11px;
+  줄 높이: 1.7;
+  색상: var(--text-tertiary);
+  텍스트 정렬: 가운데 정렬;
+  배경: var(--bg);
+  border-top: 1px 솔리드 var(--border);
+}
+.lp-footer strong { color: var(--text-secondary); font-weight: 700; }
+
+/* ===== 플로팅 CTA ===== */
+.float-cta {
+  위치: 고정됨;
+  왼쪽: 50%;
+  하단: 16px;
+  변환: translateX(-50%);
+  z-인덱스: 50;
+  너비: calc(100% - 32px);
+  최대 너비: 448px;
+  패딩: 14px 22px;
+  배경: var(--gradient-1);
+  테두리: 없음;
+  테두리 반경: 16px;
+  색상: #fff;
+  글꼴 크기: 15px;
+  글꼴 두께: 700;
+  글자 간격: -0.02em;
+  커서: 포인터;
+  글꼴 패밀리: 상속됨;
+  box-shadow: 0 8px 28px rgba(108,92,231,0.45);
+  불투명도: 0;
+  전환: 불투명도 0.3초;
+  포인터 이벤트: 없음;
+}
+.float-cta.show { 불투명도: 1; 포인터 이벤트: 자동; }
+
 </style>
 </head>
-<body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brand">JJH<small>박기성 보험설계사</small></div>
-      <a class="call" href="tel:01082785253">상담전화</a>
-    </header>
+본문>
+<div class="lp-wrap">
 
-    <!-- Hero -->
-    <div class="hero">
-      <span class="badge">⭐ 누적 상담 1,200건</span>
-      <h1>가족의 내일을 지키는<br/><b>맞춤형 보장 설계</b>를 시작하세요</h1>
-      <p>10년 경력 보험설계사가 직접 상담해 드립니다. 가입 전 부담 없는 무료 진단부터.</p>
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-badge"><span class="pulse"></span> 프리미엄점검</div>
+  <h1>
+    <span class="line">가입만 하고</span>
+    <span class="line">끝난해,</span>
+    <span class="line"><span class="grad">필요할 때 모든 금</span></span>
+    <span class="line"><span class="grad"> 받을 수 있나요?</span></span>
+  </h1>
+  <p class="hero-desc">
+    열쇠는 중요한 역할을 합니다<br>
+    아플 때 제대로 참여해주셔서 소중합니다.
+  </p>
+  <div class="hero-cta-wrap">
+    <button class="btn-hero js-scroll-to-form" type="button">
+      내 무료로 확인하기
+      <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </버튼>
+  </div>
+</section>
 
-      <div class="profile">
-        <div class="avatar">JJH</div>
-        <div class="who">
-          <strong>박기성 설계사</strong>
-          프라임에셋 · GA 소속 · 종합자산관리사
-        </div>
+<!-- 문제 -->
+<section class="problem">
+  <div class="section-label reveal">확인</div>
+  <h2 class="공개">
+    이런 상황,<br>
+    <span class="em">남의 일이라고 생각하셨나요?</span>
+  </h2>
+  <p class="하단 설명 공개">
+    보험에 가입해 안심하고 찾을 수 있습니다.<br>
+    실제로는 이런 일이 생각보다 자주 들리는군요.
+  </p>
+  <div class="stat-cards">
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FF6B4A" stroke-width="2"/><path d="M12 7v10M15 9.5c0-1.38-1.34-2.5-3-2.5s-3 1.12-3 2.5 1.34 2.5 3 2.5 3 1.12 3 2.5-1.34 2.5-3 2.5" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="11">0</span><span class="unit">조원</span></div>
       </div>
+      <h3>아무도 안간금</h3>
+      <p>청구할 수 있는 걸 모르서, 되돌아서, 그냥 간 돈</p>
+      <span class="stat-source">금융감독원, 2025</span>
+    </div>
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M23 6l-9.5 9.5-5-5L1 18" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6h6v6" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="60">0</span><span class="unit">%</span></div>
+      </div>
+      <h3>5기준으로 못읽고 해약</h3>
+      <p>10명 중 6명. 백만장자만 원만히 받아들이지 못함</p>
+      <span class="stat-source">생명보험협회 공시, 2024</span>
+    </div>
+    <div class="stat-card tilt-card">
+      <div class="stat-top">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 7l9-4 9 4" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7l3 7c0 1.66 1.34 3 3 3s3-1.34 3-3l3-7" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(-3,0)"/></svg></div>
+        <div class="stat-number"><span class="counter" data-target="64">0</span><span class="unit">%</span></div>
+      </div>
+      <h3> 보험 전투 10건 중 6건, "왜 안 줘?"</h3>
+      <p>청구했는데 주거나 깎는 경우. 어떻게 실험을 했는지</p>
+      <span class="stat-source">손해보험협회, 2025</span>
+    </div>
+  </div>
+</section>
 
-      <div class="cta-row">
-        <a class="btn btn-kakao" href="#contact">💬 카톡상담</a>
-        <a class="btn btn-tel" href="tel:01012345678">📞 전화상담</a>
+<!-- 역할 (차이점) -->
+<section class="role">
+  <div class="role-glow role-glow-1"></div>
+  <div class="role-glow role-glow-2"></div>
+  <div class="section-label reveal">차이점</div>
+  <h2 class="reveal">옆에서 주는 사람이<br>있고 나만의 차이</h2>
+  <p class="하단 설명 공개">
+    같은 의미로 관리하는 사람에 따라<br>
+    고객이 금액을 변경할 수 있습니다.
+  </p>
+  <div class="compare-box compare-bad">
+    <div class="compare-label">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M6 6l4 4M10 6l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      총괄 없이 혼자 관리할 때
+    </div>
+    <ul class="compare-list">
+      <li><span class="bullet"></span>청구할 수 있는 상황이 몰라도 이상입니다</li>
+      <li><span class="bullet"></span>심장 생명서 금깎기</li>
+      <li><span class="bullet"></span>보험료 부담돼서 결국 해약</li>
+      <li><span class="bullet"></span>내 능력을 갖추기 위한 지도 모름</li>
+    </ul>
+  </div>
+  <div class="compare-box compare-good">
+    <div class="compare-label">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      전담 관리자가 함께 할 때
+    </div>
+    <ul class="compare-list">
+      <li><span class="bullet"></span> 받을 수 있는 건빠짐 없이 챙겨드립니다</li>
+      <li><span class="bullet"></span> 유리한 쪽으로 방향을 선택해 드립니다</li>
+      <li><span class="bullet"></span>부담 전용 구조를 조정합니다</li>
+      <li><span class="bullet"></span>정기적으로 내용을 확인합니다</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 전문가 -->
+<section class="expert">
+  <div class="expert-label reveal">전문가</div>
+  <h2 class="reveal">평범한 상담상담<br>가지 서비스를 제공합니다.</h2>
+  <p class="하단 설명 공개">
+    금을 받아 본 사람은 받는 법을 압니다.<br>
+    상담이 아닌, 실전경험이 찾아갑니다.
+  </p>
+
+  <div class="expert-list">
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-claim">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#6C5CE7" stroke-width="2"/></svg>
+      </div>
+      <div>
+        <strong>수많은 금액 청구 환경</strong>
+        <p>단순 서류 접수가 아닌, 실제로 금을 받아낸 현장 경험</p>
       </div>
     </div>
 
-    <!-- Stats -->
-    <section style="padding-top:0">
-      <div class="stats">
-        <div class="stat"><div class="n">10<small>년</small></div><div class="l">설계 경력</div></div>
-        <div class="stat"><div class="n">1,200<small>+</small></div><div class="l">누적 상담</div></div>
-        <div class="stat"><div class="n">98<small>%</small></div><div class="l">고객 만족</div></div>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-dispute">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-    </section>
-
-    <!-- About -->
-    <section>
-      <div class="eyebrow">About</div>
-      <h2>고객의 삶을 먼저 듣고,<br/><b>꼭 필요한 보장</b>만 설계합니다.</h2>
-      <p class="lead">
-        보험은 상품을 파는 일이 아니라 고객의 인생을 함께 설계하는 일이라고 믿습니다.
-        과한 보장도, 부족한 보장도 없이 라이프스타일에 딱 맞는 포트폴리오를 제안해 드립니다.
-      </p>
-    </section>
-
-    <!-- Services -->
-    <section>
-      <div class="eyebrow">Services</div>
-      <h2>이런 <b>상담</b>이 가능합니다</h2>
-      <div class="cards">
-        <div class="card">
-          <div class="ico">🛡️</div>
-          <h3>종합 건강보험</h3>
-          <p>암·뇌·심장 3대 진단부터 실손까지 한 번에 진단</p>
-        </div>
-        <div class="card">
-          <div class="ico">👨‍👩‍👧</div>
-          <h3>가족 보장 설계</h3>
-          <p>가장의 책임을 지키는 사망·후유장해 설계</p>
-        </div>
-        <div class="card">
-          <div class="ico">🧒</div>
-          <h3>어린이 보험</h3>
-          <p>출생 전부터 30세까지 평생 든든한 보장</p>
-        </div>
-        <div class="card">
-          <div class="ico">💰</div>
-          <h3>연금·저축</h3>
-          <p>은퇴 후 현금흐름을 만드는 장기 자산 설계</p>
-        </div>
-        <div class="card">
-          <div class="ico">🏥</div>
-          <h3>실손 리모델링</h3>
-          <p>오래된 실손, 보험료 부담 줄이고 보장 강화</p>
-        </div>
-        <div class="card">
-          <div class="ico">🏢</div>
-          <h3>법인·사업자</h3>
-          <p>CEO 플랜, 퇴직금, 위험 분담 종합 컨설팅</p>
-        </div>
+      <div>
+        <strong>실제 동물 운동 능력</strong>
+        <p>보험사와의 새에서 고객 편에 서서 해결하는 실전 이력</p>
       </div>
-    </section>
+    </div>
 
-    <!-- Why -->
-    <section>
-      <div class="eyebrow">Why me</div>
-      <h2>박기성 설계사를 <b>선택해야 하는 이유</b></h2>
-      <ul class="why">
-        <li>
-          <div class="num">01</div>
-          <div>
-            <h4>약 40여 개 보험사 비교 설계</h4>
-            <p>특정 회사에 치우치지 않고 객관적인 비교로 가장 합리적인 상품을 제안합니다.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">02</div>
-          <div>
-            <h4>가입 이후가 진짜 시작</h4>
-            <p>보험금 청구·갱신·리모델링까지 평.생. 1:1 사후 관리해 드립니다.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">03</div>
-          <div>
-            <h4>강요 없는 무료 상담</h4>
-            <p>가입을 권하지 않습니다. 먼저 보장 분석 리포트를 받아 보세요.</p>
-          </div>
-        </li>
-        <li>
-          <div class="num">04</div>
-          <div>
-            <h4>방문 / 비대면 모두 가능</h4>
-            <p>편한 장소·시간에 맞춰 찾아 뵙거나 화상 상담으로 진행합니다.</p>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Reviews -->
-    <section>
-      <div class="eyebrow">Reviews</div>
-      <h2>고객님들의 <b>실제 후기</b></h2>
-      <div class="reviews">
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"기존 보험 정리부터 신규 가입까지 꼼꼼하게 챙겨 주셔서 매달 12만 원을 아꼈어요. 무엇보다 강요가 없어서 좋았습니다."</p>
-          <div class="who2">— 30대 직장인 김○○ 님</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"보험 가입 뿐만 아니라 일상생활 자체에 여러가지 도움을 주시니 너무 감사해요."</p>
-          <div class="who2">— 50대 주부 소○○ 님</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"법인 CEO 플랜을 의뢰했는데 세무사·노무사와 함께 다각도로 봐주셔서 신뢰가 갔습니다."</p>
-          <div class="who2">— 중소기업 대표 박○○ 님</div>
-        </div>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-pro">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 15l-2 5 2-2 2 2-2-5z" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9" r="6" stroke="#34D399" stroke-width="2"/></svg>
       </div>
-    </section>
+      <div>
+        <strong>손해사정회사 전문위원 구성</strong>
+        <p>보험사 내부 논리를 충분히 이해하는 전문적 자격과 탄력적 경력</p>
+      </div>
+    </div>
 
-    <!-- Form -->
-    <section id="contact">
-      <div class="eyebrow">Free consult</div>
-      <h2>무료 보장 분석<br/><b>지금 신청하기</b></h2>
-      <p class="lead">신청해 주신 정보로 24시간 이내 연락드립니다.</p>
-
-      <form class="form" onsubmit="event.preventDefault();alert('상담 신청이 접수되었습니다. 곧 연락드리겠습니다 :)');">
-        <label for="name">성함</label>
-        <input id="name" name="name" required placeholder="홍길동" />
-
-        <div class="row">
-          <div>
-            <label for="phone">연락처</label>
-            <input id="phone" name="phone" type="tel" required placeholder="010-0000-0000" />
-          </div>
-          <div>
-            <label for="age">나이</label>
-            <input id="age" name="age" type="number" min="0" placeholder="35" />
-          </div>
-        </div>
-
-        <label for="topic">관심 분야</label>
-        <select id="topic" name="topic">
-          <option>건강·암보험</option>
-          <option>실손 리모델링</option>
-          <option>어린이 보험</option>
-          <option>종신·정기보험</option>
-          <option>연금·저축</option>
-          <option>법인·사업자</option>
-          <option>기타 / 전체 진단</option>
-        </select>
-
-        <label for="memo">유의사항
-
-■ 다음과 같은 경우 이벤트 참여가 제한되거나 불가능할 수 있습니다.
-· 본인 또는 직계가족 중 보험설계사인 경우
-· 보험 리모델링 의사가 전혀 없는 경우
-· 미성년자, 대학생 등 고정 수입이 없는 경우
-· 고령 또는 병력으로 인해 보험 가입이 어려운 경우
-· 허위 정보 기입 또는 고의적 사실 은폐가 확인될 경우
-■ 혜택은 전문가 대면 상담을 완료하신 후 제공되며 전문가 상담 도중 고객의 요청으로 상담이 중단된 경우, 혜택 지급이 제한될 수 있습니다.
-■ 이벤트는 기간 내 1인 1회만 참여 가능하며, 가족당 1인만 참여할 수 있습니다.
-■ 신청 시 제공한 개인정보에 오류 또는 누락이 있는 경우 혜택 제공이 제한될 수 있습니다.
-■ 동일인이 명의 또는 정보를 변경하여 중복 참여한 사실이 확인될 경우, 모든 참여 및 혜택이 무효처리 됩니다.
-■ 고객의 귀책 사유(정보 오기재, 연락 불가, 상품 훼손, 분실 등)로 인해 혜택 수령이 불가능한 경우, 재발송 및 보상이 불가합니다.
-■ 해당 이벤트는 사정에 따라 사전 고지 없이 변경/종료될 수 있습니다. (선택)</label>
-        <textarea id="memo" name="memo" placeholder="예) 평일 저녁 7시 이후 연락 가능합니다."></textarea>
-
-        <label class="check">
-          <input type="checkbox" required />
-          <span>개인정보 수집·이용에 동의합니다. (상담 목적 외 사용하지 않으며 1년 후 파기됩니다.)</span>
-        </label>
-
-        <button class="submit" type="submit">무료 상담 신청하기</button>
-      </form>
-    </section>
-
-    <!-- FAQ -->
-    <section>
-      <div class="eyebrow">FAQ</div>
-      <h2>자주 묻는 <b>질문</b></h2>
-
-      <details>
-        <summary>상담은 정말 무료인가요?</summary>
-        <p>네, 상담과 보장 분석 리포트까지 모두 무료입니다. 가입 강요는 절대 없습니다.</p>
-      </details>
-      <details>
-        <summary>제 보험을 한눈에 정리받을 수 있나요?</summary>
-        <p>가지고 계신 증권을 보내 주시면 한 장의 분석 리포트로 정리해 드립니다.</p>
-      </details>
-      <details>
-        <summary>지역이 멀어도 상담이 가능한가요?</summary>
-        <p>전국 어디든 화상·전화 상담이 가능하며 수도권은 직접 방문도 가능합니다.</p>
-      </details>
-      <details>
-        <summary>이미 가입한 보험을 해지해야 하나요?</summary>
-        <p>아닙니다. 우선 진단 후 유지·보완·해지 여부를 객관적으로 함께 결정합니다.</p>
-      </details>
-    </section>
-
-    <footer>
-      <div class="logo">박기성 보험설계사</div>
-      <br/>
-      © <span id="y"></span> JJH. All rights reserved.
-    </footer>
+    <div class="expert-item reveal">
+      <div class="expert-icon ic-media">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="15" rx="2" stroke="#A855F7" stroke-width="2"/><path d="M17 2l-5 5-5-5" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <strong>언론에 대한 상담사</strong>
+        <p>방송과 기사에서 검증된 것으로, 이름을 걸고 찾아갑니다</p>
+      </div>
+    </div>
   </div>
 
-  <nav class="floatbar">
-    <a class="fb-call" href="tel:01082785253">📞 전화</a>
-    <a class="fb-kakao" href="https://open.kakao.com/o/s6eGmtai">💬 카톡</a>
-    <a class="fb-form" href="#contact">📝 상담신청</a>
-  </nav>
+  <div class="expert-bottom reveal">
+    참여하는 것이 아니라,<br><span>받아야 할 때 진짜 힘이 되는 사람</span>이 됩니다.
+  </div>
+</section>
 
-  <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+<!-- CTA 하단 -->
+<section class="cta-bottom">
+  <div class="cta-bottom-glow"></div>
+  <div class="section-label reveal">지금 시작하세요</div>
+  <h2 class="reveal">지금 바로<br>확인해보세요</h2>
+  <p class="sub-desc discover">5분이면 신청이 종료됩니다. 비용은 없습니다.</p>
+  <button class="btn-hero reveal js-scroll-to-form" type="button">
+    무료점검 신청하기
+    <span class="btn-arrow"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </버튼>
+</section>
+
+
+<!-- 상담 양식 -->
+<section class="consult-form" id="consult-form">
+  <div class="section-label reveal">무료 검진</div>
+  <h2 class="공개">
+    부품 정보만 남기기<br>
+    <span class="grad">전문가가 직접 연락드립니다</span>
+  </h2>
+  <p class="sub-desc discover">상담 비용은 100% 무료입니다. 가입하는 것은 절대 불가능합니다.</p>
+  <form onsubmit="event.preventDefault(); var btn=this.querySelector('.submit'); btn.textContent='접수꼭 ✓'; btn.disabled=true; Alert('신청이 접수되었습니다. 24시간 동안 연락주셔야 합니다.');">
+    <div>
+      <label for="cf-name">이름</label>
+      <input id="cf-name" name="name" required placeholder="홍길동" />
+    </div>
+    <div class="field-row">
+      <div>
+        <label for="cf-phone">연락처</label>
+        <input id="cf-phone" name="phone" type="tel" required placeholder="010-0000-0000" />
+      </div>
+      <div>
+        <label for="cf-age">나이</label>
+        <input id="cf-age" name="age" type="number" min="0" placeholder="35" />
+      </div>
+    </div>
+    <div>
+      <label for="cf-topic">점검을 원하는 항목</label>
+      <select id="cf-topic" name="topic">
+        <option>전체 계열</option>
+        <option>실손 / 의료비</option>
+        <option>암 · 3대 진단</option>
+        <option>종신 · 정기</option>
+        <option>어린이사업</option>
+        <option> 연금 · 연금</option>
+        <option>보험금 청구/상담 상담</option>
+      </select>
+    </div>
+    <div>
+      <label for="cf-memo">남기실 말씀(선택)</label>
+      <textarea id="cf-memo" name="memo" placeholder="예) 평일 저녁 7시 이후에 연락 가능합니다."></textarea>
+    </div>
+    <label class="동의">
+      <input type="checkbox" required />
+      <span>개인정보 수집·이용에 동의합니다. (상담 목적 외부 사용하지 않고 종료하면 안전하게 조치합니다.)</span>
+    <label class="동의">
+      <input type="checkbox" required />
+<span> 유의사항
+■ 다음과 유사한 경우 이벤트 참여를 제한할 수 있습니다.
+· 본인 또는 직계가족 중설계사인 경우
+· 조사관이 전혀 없는 경우
+· 미성년자, 등 고정 수입이 없는 경우
+· 덩어리로 인해 의심이 되는 경우
+· 허위 정보 사실 또는 고의적은 폐가 확인되는 경우
+■ 혜택은 전문가 대면 상담을 종료하신 후 고객의 요청으로 상담이 중단된 경우, 혜택 보상을 제한하실 수 있습니다.
+■ 이벤트는 기간 내 1인 1회만 참여 가능하며, 가족당 1인만 참여가 가능합니다.
+■ 신청할 때 개인 정보에 대한 응답이 있는 경우에는 제공을 제한할 수 있습니다.
+■ 동일인이 소유권 또는 정보를 변경하여 변형 사실이 확인되는 경우, 모든 참여 및 혜택이 적용됩니다.
+■ 고객의 귀책이 있는 경우(정보 줄재, 연결 연결, 상품 자체, 위치 등)로 인해 귀책을 찾는 경우, 반환 송 및 충전기가 분리됩니다.
+■ 해당 제출물은 진료에 따라 사전에 변경 없이/종료될 수 있습니다.</span>
+    <button class="submit" type="submit">무료 신청하기</button>
+  </form>
+</section>
+
+<footer class="lp-footer">
+  
+
+  <strong> 개인정보 책임관리자명 : 박기성 </strong><br>
+ pgs82785253@gmail.com 01082785253<br>
+  © <span id="cur-year"></span> bobobun. 모든 권리 보유.
+</footer>
+
+<button class="float-cta js-scroll-to-form" type="button">무료 프리미엄점검 신청하기</button>
+
+</div><!-- /lp-wrap -->
+
+<script>
+document.body.classList.add('anim');
+const wrap = document.querySelector('.lp-wrap');
+(wrap)이면 wrap.classList.add('anim');
+
+// ===== 교차로 관찰자 =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    만약 (entry.isIntersecting이 아니면) return;
+    const el = entry.target;
+    el.classList.add('visible');
+
+    // 연사 및 플래시 기능이 있는 카운터
+    el.classList에 'stat-card'가 포함되어 있으면 {
+      const counter = el.querySelector('.counter');
+      카운터가 0이고 카운터의 데이터셋이 애니메이션되지 않은 경우 {
+        counter.dataset.animated = 'true';
+        animateCounter(counter, () => {
+          counter.classList.add('burst');
+          el.classList.add('counted');
+        });
+      }
+    }
+
+    // 비교: 좋은 것이 나타날 때 나쁜 것이 어둡게 보입니다.
+    el.classList에 'compare-good'이 포함되어 있으면 {
+      const bad = document.querySelector('.compare-bad');
+      (나쁜)이면 bad.classList에 'dimmed'를 추가합니다.
+      setTimeout(() => {
+        el.classList.add('items-revealed');
+        const items = el.querySelectorAll('.compare-list li');
+        항목에 대해((li, i) => {
+          li.style.transitionDelay = `${i * 0.12}s`;
+        });
+      }, 400);
+    }
+  });
+}, { 임계값: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
+  관찰자.관찰(el);
+});
+
+// ===== 지연 시간 조정 =====
+함수 addStagger(selector, baseDelay = 0) {
+  document.querySelectorAll(selector).forEach((el, i) => {
+    el.style.transitionDelay = `${baseDelay + i * 0.12}s`;
+  });
+}
+
+addStagger('.stat-card');
+
+// ===== 카운터 애니메이션 =====
+function animateCounter(el, onComplete) {
+  const target = parsInt(el.dataset.target);
+  지속 시간 = 1400;
+  const start = performance.now();
+  함수 update(now) {
+    경과 시간 = 현재 시간 - 시작 시간;
+    const progress = Math.min(경과 시간 / 지속 시간, 1);
+    const eased = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.round(target * eased);
+    진행률이 1 미만이면 {
+      requestAnimationFrame(업데이트);
+    } 또 다른 {
+      만약 (onComplete)이면 onComplete();
+    }
+  }
+  requestAnimationFrame(업데이트);
+}
+
+// ===== 기울기 효과 =====
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('pointermove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -3;
+    const rotateY = ((x - centerX) / centerX) * 3;
+    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+  });
+  card.addEventListener('pointerleave', () => {
+    카드 스타일 변환 = '';
+  });
+});
+
+// ===== 버튼 리플 =====
+document.querySelectorAll('.btn-hero').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height) * 2;
+    ripple.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);transform:scale(0);animation:btnRipple 0.6s linear;pointer-events:none;width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;`;
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
+
+const style = document.createElement('style');
+style.textContent = '@keyframes btnRipple { to { transform: scale(1); opacity: 0; } }';
+document.head.appendChild(style);
+
+// ===== 대체 기능 =====
+setTimeout(() => {
+  document.querySelectorAll('.reveal, .stat-card, .compare-box').forEach(el => {
+    el.classList에 'visible'이 포함되어 있지 않으면
+      const rect = el.getBoundingClientRect();
+      만약 rect.top이 window.innerHeight + 100보다 작으면 el.classList에 'visible'을 추가합니다.
+    }
+  });
+}, 5000);
+
+// ===== CTA → 랜딩 페이지 끝을 환영포트 최상단으로 (plink-manager/dbmaker 폼옆) =====
+함수 bjSmoothScrollTo(win, targetY, duration) {
+  var doc, body;
+  try { doc = win.document.documentElement; body = win.document.body; } catch(e) { doc = null; body = null; }
+  var start = 0;
+  try { start = win.pageYOffset || (doc && doc.scrollTop) || (body && body.scrollTop) || 0; } catch(e) {}
+  var dist = targetY - start;
+  var t0 = Date.now();
+  var d = duration || 650;
+  함수 ease(t) { return 1 - Math.pow(1 - t, 3); }
+  함수 tick() {
+    var elapsed = Date.now() - t0;
+    변수 p = 경과 시간 / 일;
+    만약 (p > 1)이면 p = 1입니다.
+    var y = start + dist * ease(p);
+    try { win.scrollTo(0, y); } catch(e) {}
+    try { if (doc) doc.scrollTop = y; } catch(e) {}
+    try { if (body) body.scrollTop = y; } catch(e) {}
+    p < 1이면 setTimeout(tick, 16)을 설정합니다.
+  }
+  진드기();
+}
+
+document.querySelectorAll('.js-scroll-to-form').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.getElementById('consult-form');
+    만약 (!target)이면 반환;
+    var rect = target.getBoundingClientRect();
+    var targetY = (window.pageYOffset || document.documentElement.scrollTop) + rect.top - 24;
+    bjSmoothScrollTo(window, targetY, 700);
+  });
+});
+
+
+// ===== 플로팅 CTA 표시 여부 =====
+(기능(){
+  var btn = document.querySelector('.float-cta');
+  var hero = document.querySelector('.hero');
+  var form = document.getElementById('consult-form');
+  만약 (!btn || !hero || !form)이면 반환;
+  onScroll() 함수{
+    var HeroBottom = Hero.getBoundingClientRect().bottom;
+    var formTop = form.getBoundingClientRect().top;
+    var vh = window.innerHeight;
+    만약 heroBottom이 80보다 작고 formTop이 vh - 120보다 크다면 btn.classList에 'show'를 추가합니다.
+    그렇지 않으면 btn.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+var yearEl = document.getElementById('cur-year');
+(yearEl)이 yearEl.textContent = new Date().getFullYear();
+
+</script>
+
 </body>
 </html>
