@@ -3,19 +3,16 @@ renderer.py
 ===========
 카드 데이터(JSON) → HTML 주입 → Playwright 캡처 → PNG 저장.
 
-지시서 1-1:
+정보형 카드 구조 (cover/intro/point/tip/summary/cta).
 - 1080x1080 PNG
-- bottom-stack CSS (position absolute, bottom 74px, gap 16px)
-- 사인오프는 본인/개인 브랜드명만 (GA명 금지)
+- bottom-stack 고정 (page indicator + 사인오프)
 """
 
 from __future__ import annotations
 
 import asyncio
 import os
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 import yaml
 from playwright.async_api import async_playwright
@@ -25,7 +22,7 @@ from playwright.async_api import async_playwright
 # 카드 타입별 메인 콘텐츠 HTML 빌더
 # ----------------------------------------------------------
 def _accent(text: str, accent: str | None) -> str:
-    """헤드라인 안에서 강조 단어를 <span class="accent">로 감싸기."""
+    """텍스트 안 강조 단어를 <span class="accent">로 감싸기."""
     if not accent or accent not in text:
         return text
     return text.replace(accent, f'<span class="accent">{accent}</span>', 1)
@@ -35,66 +32,27 @@ def _build_main_html(card: dict) -> str:
     t = card.get("type", "")
     headline = card.get("headline", "")
     subhead = card.get("subhead", "")
+    body = card.get("body", "")
     accent = card.get("accent", "")
+    label = card.get("label", "")
 
-    if t == "cover":
+    if t in ("cover", "intro", "summary"):
         return f"""
         <div class="headline">{_accent(headline, accent)}</div>
         <div class="subhead">{subhead}</div>
         """
 
-    if t == "problem":
+    if t == "point":
         return f"""
+        <div class="point-num">{label}</div>
         <div class="headline">{_accent(headline, accent)}</div>
-        <div class="subhead">{subhead}</div>
+        <div class="body">{body}</div>
         """
 
-    if t == "mistake":
-        bad = card.get("bad_quote", "")
-        explain = card.get("explain", "")
+    if t == "tip":
         return f"""
         <div class="headline">{_accent(headline, accent)}</div>
-        <div class="quote-box bad">
-          <span class="label">SETTLER MENT</span>
-          {bad}
-        </div>
-        <div class="subhead" style="margin-top:24px">{explain}</div>
-        """
-
-    if t == "before":
-        bad = card.get("bad_quote", "")
-        return f"""
-        <div class="headline">{_accent(headline, accent)}</div>
-        <div class="quote-box bad">
-          <span class="label">BEFORE</span>
-          {bad}
-        </div>
-        """
-
-    if t == "after":
-        good = card.get("good_quote", "")
-        return f"""
-        <div class="headline">{_accent(headline, accent)}</div>
-        <div class="quote-box good">
-          <span class="label">AFTER</span>
-          {_accent(good, accent)}
-        </div>
-        """
-
-    if t == "theory":
-        author = card.get("author", "")
-        quote = card.get("quote", "")
-        explain = card.get("explain", "")
-        return f"""
-        <div class="theory-author">— {author}</div>
-        <div class="theory-quote">"{quote}"</div>
-        <div class="theory-explain">{explain}</div>
-        """
-
-    if t == "summary":
-        return f"""
-        <div class="headline">{_accent(headline, accent)}</div>
-        <div class="subhead">{subhead}</div>
+        <div class="tip-box">{body}</div>
         """
 
     if t == "cta":
@@ -108,30 +66,17 @@ def _build_main_html(card: dict) -> str:
 
 
 def _build_top_label_block(card: dict) -> str:
+    # point 카드는 큰 숫자(point-num)로 표시하므로 상단 라벨 생략
+    if card.get("type") == "point":
+        return ""
     label = card.get("label", "")
     if not label:
         return ""
-    # 라벨에 숫자 prefix 가 있으면 분리해서 골드로 표시
-    parts = label.split(" ", 1)
-    if len(parts) == 2 and parts[0].replace("0", "").isdigit() is False and parts[0].isdigit():
-        return (
-            f'<div class="top-label">'
-            f'  <span class="num">{parts[0]}</span>'
-            f'  <span>{parts[1]}</span>'
-            f'</div>'
-        )
-    if len(parts) == 2 and parts[0].isdigit():
-        return (
-            f'<div class="top-label">'
-            f'  <span class="num">{parts[0]}</span>'
-            f'  <span>{parts[1]}</span>'
-            f'</div>'
-        )
     return f'<div class="top-label"><span>{label}</span></div>'
 
 
 def _build_corner_quote_block(card: dict) -> str:
-    if card.get("type") in ("theory", "summary"):
+    if card.get("type") in ("summary", "tip"):
         return '<div class="corner-quote">&ldquo;</div>'
     return ""
 
@@ -167,7 +112,6 @@ def render_html_for_card(
 async def _render_one(page, html: str, output_path: Path, width: int, height: int):
     await page.set_viewport_size({"width": width, "height": height})
     await page.set_content(html, wait_until="networkidle")
-    # 폰트 로드 후 약간 대기
     await page.wait_for_timeout(300)
     await page.screenshot(
         path=str(output_path),
@@ -240,7 +184,7 @@ if __name__ == "__main__":
 
     p = argparse.ArgumentParser()
     p.add_argument("--card-json", required=True, help="content_generator.py 결과 JSON 경로")
-    p.add_argument("--out-dir", required=True, help="PNG 출력 디렉토리")
+    p.add_argument("--out-dir", required=True, help="PNG 출력 디렉터리")
     p.add_argument("--config", default="config.yaml")
     args = p.parse_args()
 
