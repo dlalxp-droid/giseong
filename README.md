@@ -1,10 +1,13 @@
 # 보험 상담 화법 카드뉴스 자동화 시스템
 
-인스타그램 피드용 카드뉴스(1080x1080, 8장/세트)를 Claude API로 자동 생성하고,
-지정된 시간(매일 08:30 / 18:00)에 **인스타그램(Meta Graph API) + 네이버 밴드** 양쪽으로
-자동 업로드하는 시스템.
+카드뉴스(1080x1080, 8장/세트)를 Claude API로 자동 생성하고,
+지정된 시간(매일 08:30 / 18:00)에 **인스타그램(Meta Graph API) + 네이버 밴드(Playwright)**
+양쪽으로 자동 업로드하는 시스템.
 
 타겟: 보험설계사. 콘텐츠: 보험 상담 화법 (보상 관련 주제는 자동 회피).
+
+> 네이버 밴드는 Open API 앱 등록이 어려워 **API를 사용하지 않고**, 저장된 로그인
+> 세션으로 Playwright 브라우저 자동화를 통해 밴드 웹사이트에 직접 글을 작성한다.
 
 ---
 
@@ -14,7 +17,7 @@
 .
 ├── generate.py              # 카드뉴스 일괄 생성 진입점
 ├── scheduler.py             # 인스타 업로드 진입점 (cron)
-├── band_scheduler.py        # 네이버 밴드 업로드 진입점 (cron)
+├── band_scheduler.py        # 네이버 밴드 업로드 진입점 (cron, Playwright)
 ├── config.yaml              # 디자인/콘텐츠/슬롯/플랫폼 설정
 ├── .env.example             # 환경변수 템플릿
 ├── requirements.txt
@@ -25,8 +28,7 @@
 │   ├── renderer.py          # HTML → Playwright → PNG
 │   ├── image_host.py        # Cloudinary 업로드 (Meta는 public URL 요구)
 │   ├── ig_uploader.py       # Meta Graph API 캐러셀 게시
-│   ├── band_uploader.py     # 네이버 밴드 게시 (api / web 모드)
-│   └── band_auth.py         # 네이버 밴드 OAuth2 헬퍼
+│   └── band_uploader.py     # 네이버 밴드 게시 (Playwright 웹 자동화)
 ├── input/                   # 사용자 자료 (PDF 등) drop
 ├── output/                  # 생성물 (draft → approved 게이트)
 ├── captions/                # YYYY-MM-DD_AM.txt, _PM.txt
@@ -68,64 +70,27 @@ cp .env.example .env
 
 ---
 
-## 4. 이미지 호스팅 (Cloudinary)
+## 4. 이미지 호스팅 (Cloudinary, 인스타용)
 
 Meta API는 **public URL** 만 받기 때문에 PNG를 외부에 올려야 함.
-밴드 `api` 모드도 같은 호스팅을 재사용.
+(밴드는 사진을 직접 첨부하므로 호스팅이 필요 없다.)
 
 1. https://cloudinary.com/users/register/free
 2. `.env` 에 `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
 
 ---
 
-## 5. 네이버 밴드 자동 업로드
+## 5. 네이버 밴드 자동 업로드 (Playwright 웹 자동화)
 
-밴드 Open API는 **글 작성**만 공식 지원하고 **사진 첨부 업로드 엔드포인트가 없다**.
-따라서 두 가지 모드를 함께 제공한다:
+밴드 Open API는 사진 첨부 게시 엔드포인트가 없고 앱 등록 승인도 까다로워
+**API를 전혀 사용하지 않는다**. 대신 로컬에서 한 번 로그인한 세션을
+`band_storage_state.json` 으로 저장해 두고, Playwright 가 그 세션으로
+band.us 에 접속해 글쓰기 → 사진 8장 첨부 → 게시를 자동 수행한다.
 
-| 모드 | 방식 | 결과 | 추천 상황 |
-|---|---|---|---|
-| `api` | Open API `/v2.2/band/post/create` | 본문 + 이미지 URL 링크 (썸네일 미리보기) | 안정적이지만 카드뉴스 8장 첨부 형태 아님. 빠른 알림용 |
-| `web` | Playwright + 저장된 로그인 세션 | 사진 8장 직접 첨부 (실제 카드뉴스 형태) | **운영 권장** |
+### 5-1. 로그인 세션(storage_state) 만들기 (최초 1회)
 
-### 5-1. Open API 앱 등록 (api 모드)
-
-1. https://developers.band.us → "Create New App"
-2. 앱 등록 후 **Client ID / Client Secret / Redirect URI** 확보
-3. 권한 스코프: `READ_BAND`, `READ_POST`, `WRITE_POST`
-4. **최초 1회 동의 화면**:
-   ```bash
-   export BAND_CLIENT_ID=...
-   export BAND_CLIENT_SECRET=...
-   export BAND_REDIRECT_URI=http://localhost/band_oauth_cb
-   python scripts/band_auth.py authorize-url
-   # 출력 URL을 브라우저로 열어 동의 → redirect_uri?code=XXX 의 code 복사
-   python scripts/band_auth.py exchange --code XXX
-   # → access_token / refresh_token 출력
-   ```
-5. `.env` 에 저장:
-   ```
-   BAND_CLIENT_ID=...
-   BAND_CLIENT_SECRET=...
-   BAND_REDIRECT_URI=...
-   BAND_ACCESS_TOKEN=ZQAA...
-   BAND_REFRESH_TOKEN=ZQAA...
-   ```
-6. 게시 대상 밴드 키 조회:
-   ```bash
-   python scripts/band_auth.py bands
-   # AABbbbbb...   내 보험상담 밴드
-   ```
-   `BAND_KEY=AABbbbbb...` 를 `.env` 에 추가.
-7. 토큰 만료 시:
-   ```bash
-   python scripts/band_auth.py refresh
-   ```
-
-### 5-2. 웹 자동 로그인 세션 만들기 (web 모드)
-
-밴드 본인 인증은 캡차/2단계가 있어 헤드리스 자동 로그인은 권장하지 않는다.
-대신 **로컬에서 한 번 로그인한 세션을 storage_state.json 으로 저장**해서 재사용한다.
+밴드 로그인은 캡차/2단계가 있어 헤드리스 자동 로그인은 권장하지 않는다.
+**보이는 브라우저에서 직접 로그인**한 뒤 쿠키를 저장한다.
 
 ```bash
 python - <<'PY'
@@ -135,7 +100,7 @@ with sync_playwright() as pw:
     ctx = b.new_context(locale="ko-KR")
     page = ctx.new_page()
     page.goto("https://auth.band.us/login_page")
-    input("브라우저에서 로그인 완료 후 Enter…")
+    input("브라우저에서 로그인 완료 후 이 터미널에서 Enter…")
     ctx.storage_state(path="band_storage_state.json")
     b.close()
 PY
@@ -147,40 +112,69 @@ BAND_ID=12345678                       # https://band.us/band/<여기>
 BAND_STORAGE_STATE=./band_storage_state.json
 ```
 
-> 세션 만료(보통 수주 ~ 수개월): 위 스크립트로 다시 만들면 됨.
+> 세션 만료(보통 수주 ~ 수개월) 시 위 스크립트로 다시 만들면 됨.
+> 만료되면 band_scheduler 가 "로그인 세션 만료" 에러로 즉시 알려준다.
 
-### 5-3. 즉시 게시 테스트
+### 5-2. 즉시 게시 테스트
 
 ```bash
-# 자료 점검만 (실제 게시 X)
+# 자료 점검만 (브라우저/게시 X)
 python band_scheduler.py --slot AM --dry-run
 
-# api 모드 — 본문 + URL 게시
-python band_scheduler.py --slot AM --mode api --push
+# 실제 게시 (헤드리스)
+python band_scheduler.py --slot AM
 
-# web 모드 — 사진 8장 첨부 게시
-python band_scheduler.py --slot AM --mode web
+# 디버그: 브라우저 창을 띄워 동작 확인
+python band_scheduler.py --slot AM --no-headless
 ```
 
-### 5-4. cron 등록
+단일 게시(스케줄러 우회)도 가능:
+
+```bash
+python scripts/band_uploader.py \
+  --caption-file captions/2026-05-04_AM.txt \
+  --images output/2026-05-04/AM/approved/card_01.png,output/2026-05-04/AM/approved/card_02.png \
+  --no-headless
+```
+
+### 5-3. cron 등록
 
 ```cron
 # 인스타 + 밴드 동시 게시
 30 8  * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot AM
-30 8  * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot AM --mode web
+30 8  * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot AM
 0  18 * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot PM
-0  18 * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot PM --mode web
+0  18 * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot PM
 ```
 
-### 5-5. GitHub Actions
+### 5-4. GitHub Actions
 
 `.github/workflows/upload-band.yml` 에 정기 워크플로우 포함.
 저장소 secrets:
-- 공통: `NOTIFY_WEBHOOK_URL`
-- api: `BAND_CLIENT_ID`, `BAND_CLIENT_SECRET`, `BAND_REFRESH_TOKEN`, `BAND_KEY`,
-  `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- web: `BAND_ID`, `BAND_STORAGE_STATE_JSON` (로컬에서 만든 storage_state.json
-  파일 **내용** 전체를 secret value 로 붙여넣음)
+- `BAND_ID` — band.us URL의 band id
+- `BAND_STORAGE_STATE_JSON` — 로컬에서 만든 `band_storage_state.json` 파일
+  **내용 전체**를 secret value 로 붙여넣음 (워크플로우가 파일로 복원)
+- `NOTIFY_WEBHOOK_URL` (선택) — 실패 알림 웹훅
+
+> 클라우드 러너의 IP/환경이 평소와 다르면 밴드가 재인증을 요구할 수 있다.
+> 세션이 자주 풀리면 로컬 cron 운영을 권장.
+
+### 5-5. 밴드 UI 변경 대응
+
+band.us 의 HTML 구조가 바뀌면 글쓰기 자동화가 실패할 수 있다.
+셀렉터는 `config.yaml` 의 `band.web_selectors_override` 에서 덮어쓴다:
+
+```yaml
+band:
+  web_selectors_override:
+    open_composer: "button.새_글쓰기_버튼"
+    editor_textarea: "div[contenteditable='true']"
+    photo_input: "input[type='file'][accept*='image']"
+    submit_button: "button.새_게시_버튼"
+    success_toast: ".toast-message"
+```
+
+기본 셀렉터는 `scripts/band_uploader.py` 의 `DEFAULT_WEB_SELECTORS` 참고.
 
 ---
 
@@ -235,13 +229,13 @@ python band_scheduler.py --slot AM --dry-run
 
 | 에러 | 원인 / 해결 |
 |---|---|
-| `Container ... not ready in 60s` | 이미지 URL public 아님 / 호스팅 지연 |
+| `Container ... not ready in 60s` | 이미지 URL public 아님 / 호스팅 지연 (인스타) |
 | `(#10) Application does not have permission` | Meta 앱 검수 미완료 또는 권한 누락 |
 | `Carousel must have 2~10 items` | PNG 개수 불일치 |
 | 토큰 만료 (Meta) | 60일 만료. Graph API Explorer 재발급 |
-| `Band API error: ... 'result_code': N` | Band 에러 코드 표 참조 (1=정상). 토큰 만료시 `band_auth.py refresh` |
-| Band web 모드 selector 실패 | 밴드 UI 개편. `config.yaml` `band.web_selectors_override` 로 덮어쓰기 |
-| `BAND_STORAGE_STATE` 없음 | 5-2 절차로 storage_state.json 생성 후 경로 지정 |
+| `로그인 세션 만료` (밴드) | 5-1 절차로 `band_storage_state.json` 재생성 |
+| Band selector 실패 / Timeout | 밴드 UI 개편. 5-5 `band.web_selectors_override` 로 셀렉터 교정 |
+| `로그인 세션 파일 없음` | `BAND_STORAGE_STATE` 경로 확인, 5-1 절차로 생성 |
 
 ---
 
@@ -249,7 +243,7 @@ python band_scheduler.py --slot AM --dry-run
 
 - 보상 주제 자동 회피 (system prompt 차단)
 - draft → approved 수동 게이트 (사람이 본 것만 게시)
-- 재시도 3회 (네트워크 일시 장애 대응)
+- 재시도 3회 (네트워크/일시 장애 대응)
 - 플랫폼별 분리 로그: `logs/*.json` (인스타) / `logs/band/*.json` (밴드)
 - 알림 웹훅(선택): 실패 시 슬랙/디스코드로 통보
 
