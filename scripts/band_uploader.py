@@ -9,11 +9,12 @@ web.band.us 에 로그인된 브라저 세션(band_storage_state.json)을 재사
 
 세션 생성: python make_band_session.py (1회 수동 로그인)
 
-실제 밴드 화면 구조 (2026-05 기준, band_debug 로 확인):
-  글쓰기 열기 : button._btnOpenWriteLayer
-  본문 입력창 : div.contentEditor._richEditor  (CKEditor contenteditable)
-  사진 첨부   : input[type=file] (첫 번째)
-  게시 버튼  : button._btnSubmitPost
+실제 밴드 글쓰기 흐름 (2026-05 기준, band_debug 로 확인):
+  1. button._btnOpenWriteLayer        → 글쓰기 레이어 열기
+  2. div.contentEditor._richEditor     → 본문 입력 (CKEditor)
+  3. input[type=file] (첫 번째)        → 사진 선택
+  4. "사진 올리기" 다이얼로그 → button[첨부하기] 클릭
+  5. button._btnSubmitPost             → 게시
 
 UI 변경 시 config.yaml band.web_selectors_override 로 덮어쓴다.
 """
@@ -39,12 +40,14 @@ class BandPostResult:
 
 # band.us 실측 셀렉터 (UI 변경 시 config 로 오버라이드)
 DEFAULT_WEB_SELECTORS = {
-    # 메인 화면 글쓰기 트리거 ("새로운 소식을 남겨보세요" 입력칸)
+    # 메인 화면 글쓰기 트리거
     "open_composer": "button._btnOpenWriteLayer",
     # 본문 editor (CKEditor contenteditable)
     "editor_textarea": "div.contentEditor._richEditor",
     # 사진 첨부 input (숨겨진 file input 중 첫 번째 = 사진)
     "photo_input": "input[type='file']",
+    # "사진 올리기" 다이얼로그의 [첨부하기] 버튼
+    "confirm_photos": "button:has-text('첨부하기')",
     # 게시 버튼
     "submit_button": "button._btnSubmitPost",
 }
@@ -115,17 +118,28 @@ def post_via_web(
             try:
                 editor.fill(content)
             except Exception:
-                # CKEditor 가 fill 을 거부하면 타이핑으로 대체
                 page.keyboard.type(content)
 
-            # 3) 사진 첨부 (숨겨진 file input 중 첫 번째)
+            # 3) 사진 선택 (숨겨진 file input 중 첫 번째)
             page.locator(sels["photo_input"]).first.set_input_files(
                 [str(p) for p in image_paths]
             )
 
-            # 4) 업로드 처리 대기 (장수에 비례, 최대 20초)
-            wait_ms = min(3000 + 1200 * len(image_paths), 20000)
-            page.wait_for_timeout(wait_ms)
+            # 4) "사진 올리기" 확인 다이얼로그 → [첨부하기] 클릭
+            #    (밴드는 파일 선택 후 별도 확인 창을 띄운다)
+            try:
+                page.wait_for_selector(sels["confirm_photos"], timeout=15000)
+                # 썸네일 업로드 처리 대기 (장수에 비례, 최대 15초)
+                page.wait_for_timeout(min(2000 + 1000 * len(image_paths), 15000))
+                page.click(sels["confirm_photos"])
+                # 다이얼로그 닫힘 대기
+                page.wait_for_selector(
+                    sels["confirm_photos"], state="hidden", timeout=20000
+                )
+            except Exception:
+                # 확인 다이얼로그가 안 뜨는 경우도 허용
+                pass
+
             page.wait_for_load_state("networkidle")
 
             # 5) 게시 (버튼이 활성화될 때까지 Playwright 가 자동 대기)
