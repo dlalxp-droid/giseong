@@ -3,24 +3,19 @@ band_uploader.py
 ================
 네이버 밴드 자동 업로드 모듈 (Playwright 전용).
 
-밴드 Open API 앱 등록이 계속 거절되어 API 방식을 전면 제거했다.
-이제 �은 web.band.us 에 로그인된 브라저 세션을 그대로 재사용해
+밴드 Open API 앱 등록이 어려워 API 방식을 전면 제거했다.
+web.band.us 에 로그인된 브라저 세션(band_storage_state.json)을 재사용해
 카드뉴스 PNG 여러 장을 직접 첨부하는 방식만 사용한다.
 
-세션 유지:
-  로컬에서 한 번 로그인한 쿠키를 band_storage_state.json 으로 저장해 둔 뒤
-  BAND_STORAGE_STATE 경로로 로드한다. (쿠키 만드는 방법은 README 5장)
+세션 생성: python make_band_session.py (1회 수동 로그인)
 
-흐름:
-  1. Chromium + storage_state.json 으로 로그인된 컨텍스트 생성
-  2. https://band.us/band/<band_id> 이동
-  3. 글쓰기 패널 열기 → 본문 입력
-  4. 사진 input[type=file] 에 PNG 여러 장 set_input_files
-  5. 업로드 처리 대기 → 게시 버튼 클릭
-  6. 게시 성공(URL 변화/토스트) 확인 후 종료
+실제 밴드 화면 구조 (2026-05 기준, band_debug 로 확인):
+  글쓰기 열기 : button._btnOpenWriteLayer
+  본문 입력창 : div.contentEditor._richEditor  (CKEditor contenteditable)
+  사진 첨부   : input[type=file] (첫 번째)
+  게시 버튼  : button._btnSubmitPost
 
-주의: 밴드 UI 변경에 취약. 셀렉터는 config.yaml band.web_selectors_override
-로 외부에서 덮어쓸 수 있다.
+UI 변경 시 config.yaml band.web_selectors_override 로 덮어쓴다.
 """
 
 from __future__ import annotations
@@ -42,18 +37,16 @@ class BandPostResult:
     error: str | None = None
 
 
-# band.us 기본 셀렉터 (UI 변경 시 config 로 오버라이드)
+# band.us 실측 셀렉터 (UI 변경 시 config 로 오버라이드)
 DEFAULT_WEB_SELECTORS = {
-    # 메인 화면 글쓰기 트리거
-    "open_composer": "button._btnOpenPostEditor, [data-uiselector='openPostEditor']",
-    # 본문 editor (contenteditable)
-    "editor_textarea": "div._postWriteEditor, div[contenteditable='true']",
-    # 사진 첨부 input (hidden)
-    "photo_input": "input[type='file'][accept*='image']",
+    # 메인 화면 글쓰기 트리거 ("새로운 소식을 남겨보세요" 입력칸)
+    "open_composer": "button._btnOpenWriteLayer",
+    # 본문 editor (CKEditor contenteditable)
+    "editor_textarea": "div.contentEditor._richEditor",
+    # 사진 첨부 input (숨겨진 file input 중 첫 번째 = 사진)
+    "photo_input": "input[type='file']",
     # 게시 버튼
-    "submit_button": "button._btnSubmitPost, button[data-uiselector='submitPostButton']",
-    # 게시 성공 토스트
-    "success_toast": ".uiCommonToastView, .toast-message",
+    "submit_button": "button._btnSubmitPost",
 }
 
 
@@ -68,14 +61,6 @@ def post_via_web(
 ) -> BandPostResult:
     """
     Playwright 로그인 세션으로 사진 첨부 게시.
-
-    Parameters
-    ----------
-    content : 본문 (캸션 + 해시태그)
-    image_paths : PNG 경로 리스트
-    band_id : band.us URL의 band id (예: "12345678"). None 이면 BAND_ID 환경변수
-    storage_state : 쿠키/세션 파일 경로. None 이면 BAND_STORAGE_STATE 환경변수
-    headless : 디버그 시 False 로 두면 브라우저 창 표시
     """
     from playwright.sync_api import sync_playwright
 
@@ -93,7 +78,7 @@ def post_via_web(
     if not Path(storage_state).exists():
         raise FileNotFoundError(
             f"로그인 세션 파일 없음: {storage_state}\n"
-            f"  → README 5장 절차로 band_storage_state.json 을 먼저 생성하세요"
+            f"  → python make_band_session.py 로 먼저 생성하세요"
         )
 
     with sync_playwright() as pw:
@@ -110,48 +95,53 @@ def post_via_web(
             page.goto(f"{BAND_WEB_BASE}/band/{band_id}")
             page.wait_for_load_state("networkidle")
 
-            # 세션 만료 감지: 로그인 페이지로 팁겨졌으면 세션 만료
-            if "auth.band.us" in page.url or "login" in page.url:
+            # 세션 만료 감지
+            if "auth.band.us" in page.url or "/login" in page.url:
                 return BandPostResult(
                     ok=False,
                     band_id=band_id,
                     post_key=None,
                     post_url=None,
-                    error="로그인 세션 만료 (storage_state 재생성 필요)",
+                    error="로그인 세션 만료 (make_band_session.py 재실행 필요)",
                 )
 
-            # 1) 글쓰기 패널 열기
+            # 1) 글쓰기 레이어 열기
             page.click(sels["open_composer"])
             page.wait_for_selector(sels["editor_textarea"])
 
-            # 2) 본문 입력
+            # 2) 본문 입력 (CKEditor contenteditable)
             editor = page.locator(sels["editor_textarea"]).first
             editor.click()
-            editor.fill(content)
+            try:
+                editor.fill(content)
+            except Exception:
+                # CKEditor 가 fill 을 거부하면 타이핑으로 대체
+                page.keyboard.type(content)
 
-            # 3) 사진 첨부
-            page.set_input_files(
-                sels["photo_input"],
-                [str(p) for p in image_paths],
+            # 3) 사진 첨부 (숨겨진 file input 중 첫 번째)
+            page.locator(sels["photo_input"]).first.set_input_files(
+                [str(p) for p in image_paths]
             )
 
-            # 4) 업로드 처리 대기
-            page.wait_for_timeout(2000)
+            # 4) 업로드 처리 대기 (장수에 비례, 최대 20초)
+            wait_ms = min(3000 + 1200 * len(image_paths), 20000)
+            page.wait_for_timeout(wait_ms)
             page.wait_for_load_state("networkidle")
 
-            # 5) 게시
+            # 5) 게시 (버튼이 활성화될 때까지 Playwright 가 자동 대기)
             page.click(sels["submit_button"])
 
-            # 6) 성공 확인 (토스트 또는 URL 변화)
-            try:
-                page.wait_for_selector(sels["success_toast"], timeout=15000)
-            except Exception:
-                page.wait_for_url("**/post/**", timeout=15000)
+            # 6) 성공 판정: 글쓰기 레이어(게시 버튼)가 사라지면 완료
+            page.wait_for_selector(
+                sels["submit_button"], state="hidden", timeout=30000
+            )
+            page.wait_for_load_state("networkidle")
 
             post_url = page.url
             post_key = None
             if "/post/" in post_url:
-                post_key = post_url.rsplit("/post/", 1)[-1].split("?")[0]
+                tail = post_url.rsplit("/post/", 1)[-1].split("?")[0].strip("/")
+                post_key = tail or None
 
             return BandPostResult(
                 ok=True,
