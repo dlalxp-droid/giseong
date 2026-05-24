@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import traceback
 from dataclasses import asdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -151,14 +152,16 @@ def main():
                 results.append(r)
             except Exception as e:
                 print(f"[generate] FAILED {target} {slot}: {e}", file=sys.stderr)
+                traceback.print_exc()
                 results.append({
                     "date": target.strftime("%Y-%m-%d"),
                     "slot": slot,
                     "error": str(e),
                 })
 
+    ok = [r for r in results if "error" not in r]
     print("\n" + "=" * 60)
-    print(f"GENERATED {len([r for r in results if 'error' not in r])} / {len(results)} sets")
+    print(f"GENERATED {len(ok)} / {len(results)} sets")
     print("=" * 60)
     for r in results:
         if "error" in r:
@@ -166,6 +169,15 @@ def main():
         else:
             print(f"  ✓ {r['date']} {r['slot']}: [{r['theme']}] {r['topic']} ({r['png_count']} cards)")
     print()
+
+    # 하나도 성공하지 못했으면 CI가 명확히 실패하도록 exit 1
+    if not ok:
+        print(
+            "[generate] 생성된 세트가 없습니다. 위 에러를 확인하세요 "
+            "(보통 ANTHROPIC_API_KEY 미설정/오류).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
