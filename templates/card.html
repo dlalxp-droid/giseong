@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>{{TITLE}}</title>
 <style>
-  /* ===== 컬러 토큰 (지시서 1-1 고정) ===== */
   :root {
     --navy:  #0A1628;
     --cream: #F5F1E8;
@@ -31,13 +30,11 @@
   }
 
   /* ===== 카드 타입별 배경 ===== */
-  .card.cover    { background: var(--navy); color: var(--cream); }
-  .card.problem  { background: var(--cream); color: var(--navy); }
-  .card.mistake  { background: var(--cream); color: var(--navy); }
-  .card.before   { background: var(--cream); color: var(--navy); }
-  .card.after    { background: var(--navy); color: var(--cream); }
-  .card.theory   { background: var(--cream); color: var(--navy); }
-  .card.summary  { background: var(--navy); color: var(--cream); }
+  .card.cover    { background: var(--navy);  color: var(--cream); }
+  .card.intro    { background: var(--cream); color: var(--navy); }
+  .card.point    { background: var(--cream); color: var(--navy); }
+  .card.tip      { background: var(--navy);  color: var(--cream); }
+  .card.summary  { background: var(--navy);  color: var(--cream); }
   .card.cta      { background: var(--cream); color: var(--navy); }
 
   /* ===== 상단 라벨 ===== */
@@ -48,22 +45,10 @@
     padding: 12px 28px;
     border: 2px solid currentColor;
     border-radius: 999px;
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 26px;
+    font-weight: 700;
     letter-spacing: 0.04em;
     margin-bottom: 56px;
-  }
-
-  .top-label .num {
-    font-size: 22px;
-    color: var(--gold);
-    font-weight: 700;
-  }
-
-  .card.cover .top-label,
-  .card.after .top-label,
-  .card.summary .top-label {
-    border-color: var(--cream);
   }
 
   /* ===== 메인 카피 영역 ===== */
@@ -79,105 +64,59 @@
   }
 
   .headline {
-    font-size: 84px;
+    font-size: 78px;
     font-weight: 800;
-    line-height: 1.18;
+    line-height: 1.2;
     letter-spacing: -0.02em;
     margin-bottom: 32px;
     word-break: keep-all;
   }
 
-  .headline .accent {
-    color: var(--red);
-  }
+  .headline .accent { color: var(--red); }
 
   .card.cover .headline .accent,
-  .card.after .headline .accent,
-  .card.summary .headline .accent {
-    color: var(--gold);
-  }
+  .card.tip .headline .accent,
+  .card.summary .headline .accent { color: var(--gold); }
 
   .subhead {
-    font-size: 32px;
-    font-weight: 500;
-    line-height: 1.5;
-    opacity: 0.85;
-    word-break: keep-all;
-    margin-bottom: 28px;
-  }
-
-  /* ===== Before / After 박스 ===== */
-  .quote-box {
-    padding: 36px 40px;
-    border-radius: 16px;
-    margin-top: 24px;
     font-size: 36px;
-    line-height: 1.5;
+    font-weight: 500;
+    line-height: 1.55;
+    opacity: 0.9;
+    word-break: keep-all;
+  }
+
+  /* ===== point 카드 숫자 배지 ===== */
+  .point-num {
+    font-size: 96px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+
+  .body {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.55;
+    opacity: 0.9;
+    word-break: keep-all;
+  }
+
+  /* ===== tip 강조 박스 ===== */
+  .tip-box {
+    padding: 40px 44px;
+    border-radius: 18px;
+    margin-top: 16px;
+    background: rgba(200, 161, 75, 0.16);
+    border-left: 8px solid var(--gold);
+    font-size: 40px;
+    line-height: 1.55;
     font-weight: 500;
     word-break: keep-all;
   }
 
-  .quote-box.bad {
-    background: rgba(184, 50, 26, 0.08);
-    border-left: 6px solid var(--red);
-    color: var(--navy);
-  }
-
-  .quote-box.good {
-    background: rgba(200, 161, 75, 0.15);
-    border-left: 6px solid var(--gold);
-    color: var(--cream);
-  }
-
-  .quote-box.good .accent {
-    color: var(--gold);
-    font-weight: 700;
-  }
-
-  .quote-box.bad .accent {
-    color: var(--red);
-    font-weight: 700;
-  }
-
-  .card.before .quote-box.bad { background: rgba(184, 50, 26, 0.08); }
-  .card.after .quote-box.good { background: rgba(200, 161, 75, 0.18); }
-
-  .quote-box .label {
-    display: block;
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    margin-bottom: 14px;
-    opacity: 0.7;
-  }
-
-  /* ===== 이론 카드 ===== */
-  .theory-author {
-    display: inline-block;
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--gold);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid var(--gold);
-  }
-
-  .theory-quote {
-    font-size: 44px;
-    font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 28px;
-    word-break: keep-all;
-  }
-
-  .theory-explain {
-    font-size: 28px;
-    line-height: 1.6;
-    opacity: 0.85;
-    word-break: keep-all;
-  }
-
-  /* ===== 하단 고정 영역 (지시서 1-1 핵심) ===== */
+  /* ===== 하단 고정 영역 ===== */
   .bottom-stack {
     position: absolute;
     bottom: 74px;
