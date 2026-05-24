@@ -3,17 +3,16 @@ band_scheduler.py
 =================
 네이버 밴드 자동 업로드 진입점 (cron / GitHub Actions).
 
+Playwright 브라저 자동화만 사용한다 (Band Open API 미사용).
+storage_state.json 로그인 세션을 재사용해 카드뉴스 PNG를 직접 첨부 게시.
+
 scheduler.py(인스타) 와 동일한 자료 수집 규칙을 사용한다:
   output/YYYY-MM-DD/SLOT/approved/*.png  (없으면 --allow-draft 시 draft/)
   captions/YYYY-MM-DD_SLOT.txt
 
-mode 옵션:
-  --mode api : Band Open API. 본문 + 이미지 URL 게시 (Cloudinary 호스팅 사용)
-  --mode web : Playwright 로 web.band.us 자동 업로드 (사진 8장 직접 첨부)
-
 cron 예:
-  30 8  * * *  /usr/bin/python band_scheduler.py --slot AM --mode web
-  0  18 * * *  /usr/bin/python band_scheduler.py --slot PM --mode web
+  30 8  * * *  /usr/bin/python band_scheduler.py --slot AM
+  0  18 * * *  /usr/bin/python band_scheduler.py --slot PM
 """
 
 from __future__ import annotations
@@ -24,7 +23,6 @@ import os
 import sys
 import time
 import traceback
-from dataclasses import asdict
 from datetime import date, datetime
 from pathlib import Path
 
@@ -113,10 +111,9 @@ def _log_result(target_date: date, slot: str, payload: dict) -> None:
 def run_slot(
     target_date: date,
     slot: str,
-    mode: str,
     use_draft_fallback: bool = False,
     dry_run: bool = False,
-    do_push: bool = False,
+    headless: bool = True,
     config_path: Path = ROOT / "config.yaml",
 ) -> dict:
     with open(config_path, "r", encoding="utf-8") as f:
@@ -125,11 +122,12 @@ def run_slot(
     band_cfg = cfg.get("band", {})
     retry_max = int(band_cfg.get("retry_max", 3))
     retry_delay = int(band_cfg.get("retry_delay_sec", 30))
+    selectors = band_cfg.get("web_selectors_override") or None
 
     pngs, caption_path = _collect_slot_assets(target_date, slot, use_draft_fallback)
     caption = caption_path.read_text(encoding="utf-8")
 
-    print(f"[band] {target_date} {slot} mode={mode} pngs={len(pngs)} dry_run={dry_run}")
+    print(f"[band] {target_date} {slot} pngs={len(pngs)} dry_run={dry_run}")
 
     if dry_run:
         return {
@@ -137,33 +135,20 @@ def run_slot(
             "dry_run": True,
             "date": target_date.isoformat(),
             "slot": slot,
-            "mode": mode,
             "files": [str(p) for p in pngs],
             "caption_preview": caption[:120],
         }
 
-    # api 모드면 호스팅된 URL 도 함께 첨부 (Cloudinary 사용)
-    image_urls: list[str] = []
-    if mode == "api":
-        from image_host import upload_image
-        for png in pngs:
-            public_id = f"band_{target_date.isoformat()}_{slot}_{png.stem}"
-            image_urls.append(upload_image(png, public_id=public_id))
-            print(f"  · {png.name} hosted")
-
     attempt = 0
     last_error: Exception | None = None
-    last_result: BandPostResult | None = None
     while attempt < retry_max:
         try:
-            result = publish_band(
-                mode=mode,
+            result: BandPostResult = publish_band(
                 content=caption,
-                image_paths=pngs if mode == "web" else None,
-                image_urls=image_urls if mode == "api" else None,
-                do_push=do_push,
+                image_paths=pngs,
+                headless=headless,
+                selectors=selectors,
             )
-            last_result = result
             if not result.ok:
                 raise RuntimeError(result.error or "unknown band failure")
 
@@ -171,11 +156,10 @@ def run_slot(
                 "ok": True,
                 "date": target_date.isoformat(),
                 "slot": slot,
-                "mode": mode,
-                "band_key": result.band_key,
+                "band_id": result.band_id,
                 "post_key": result.post_key,
                 "post_url": result.post_url,
-                "image_urls": image_urls,
+                "png_count": len(pngs),
                 "attempts": attempt + 1,
             }
             _log_result(target_date, slot, payload)
@@ -196,10 +180,8 @@ def run_slot(
         "ok": False,
         "date": target_date.isoformat(),
         "slot": slot,
-        "mode": mode,
         "error": str(last_error),
         "trace": traceback.format_exc(),
-        "image_urls": image_urls,
         "attempts": retry_max,
     }
     _log_result(target_date, slot, payload)
@@ -210,11 +192,10 @@ def run_slot(
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--slot", required=True, choices=["AM", "PM"])
-    p.add_argument("--mode", default="web", choices=["api", "web"])
     p.add_argument("--date", default=None, help="YYYY-MM-DD (기본: 오늘)")
     p.add_argument("--allow-draft", action="store_true")
     p.add_argument("--dry-run", action="store_true")
-    p.add_argument("--push", action="store_true", help="api 모드: 푸시 알림")
+    p.add_argument("--no-headless", action="store_true", help="브라우저 창 표시 (디버그)")
     p.add_argument("--env-file", default=str(ROOT / ".env"))
     args = p.parse_args()
 
@@ -229,10 +210,9 @@ def main():
         run_slot(
             target,
             args.slot,
-            args.mode,
             use_draft_fallback=args.allow_draft,
             dry_run=args.dry_run,
-            do_push=args.push,
+            headless=not args.no_headless,
         )
     except Exception as e:
         print(f"[band_scheduler] FATAL: {e}", file=sys.stderr)

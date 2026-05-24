@@ -2,6 +2,7 @@ name: Upload to Naver Band
 
 # ===========================================================
 # 매일 정해진 시간에 approved/ 카드뉴스를 네이버 밴드에 자동 업로드
+# Playwright 브라저 자동화 전용 (Band Open API 미사용)
 # ===========================================================
 
 on:
@@ -21,14 +22,6 @@ on:
         options:
           - AM
           - PM
-      mode:
-        description: '업로드 방식 (api: 텍스트+URL / web: 사진 첨부)'
-        required: true
-        default: 'web'
-        type: choice
-        options:
-          - web
-          - api
       date:
         description: '대상 날짜 (YYYY-MM-DD, 비워두면 오늘)'
         required: false
@@ -67,7 +60,6 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "slot=${{ github.event.inputs.slot }}" >> $GITHUB_OUTPUT
-            echo "mode=${{ github.event.inputs.mode }}" >> $GITHUB_OUTPUT
             echo "dry_run=${{ github.event.inputs.dry_run }}" >> $GITHUB_OUTPUT
             echo "date=${{ github.event.inputs.date }}" >> $GITHUB_OUTPUT
           else
@@ -77,53 +69,27 @@ jobs:
             else
               echo "slot=PM" >> $GITHUB_OUTPUT
             fi
-            echo "mode=web" >> $GITHUB_OUTPUT
             echo "dry_run=false" >> $GITHUB_OUTPUT
             echo "date=" >> $GITHUB_OUTPUT
           fi
 
-      - name: Restore Band session (web mode)
-        if: steps.slot.outputs.mode == 'web'
+      - name: Restore Band login session
         env:
           BAND_STORAGE_STATE_JSON: ${{ secrets.BAND_STORAGE_STATE_JSON }}
         run: |
           if [ -z "$BAND_STORAGE_STATE_JSON" ]; then
-            echo "::error::secrets.BAND_STORAGE_STATE_JSON not set"
+            echo "::error::secrets.BAND_STORAGE_STATE_JSON not set (README 5장 참고)"
             exit 1
           fi
           printf '%s' "$BAND_STORAGE_STATE_JSON" > band_storage_state.json
 
-      - name: Refresh Band access token (api mode)
-        if: steps.slot.outputs.mode == 'api'
-        env:
-          BAND_CLIENT_ID: ${{ secrets.BAND_CLIENT_ID }}
-          BAND_CLIENT_SECRET: ${{ secrets.BAND_CLIENT_SECRET }}
-          BAND_REFRESH_TOKEN: ${{ secrets.BAND_REFRESH_TOKEN }}
-        run: |
-          python - <<'PY'
-          import json, os, pathlib, sys
-          sys.path.insert(0, 'scripts')
-          from band_auth import refresh_access_token
-          tok = refresh_access_token()
-          access = tok['access_token']
-          pathlib.Path(os.environ['GITHUB_ENV']).open('a').write(f"BAND_ACCESS_TOKEN={access}\n")
-          PY
-
       - name: Run band_scheduler
         env:
-          # 공용
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
-          # api 모드
-          BAND_KEY: ${{ secrets.BAND_KEY }}
-          BAND_ACCESS_TOKEN: ${{ env.BAND_ACCESS_TOKEN }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          # web 모드
           BAND_ID: ${{ secrets.BAND_ID }}
           BAND_STORAGE_STATE: ./band_storage_state.json
         run: |
-          ARGS="--slot ${{ steps.slot.outputs.slot }} --mode ${{ steps.slot.outputs.mode }}"
+          ARGS="--slot ${{ steps.slot.outputs.slot }}"
           if [ -n "${{ steps.slot.outputs.date }}" ]; then
             ARGS="$ARGS --date ${{ steps.slot.outputs.date }}"
           fi
