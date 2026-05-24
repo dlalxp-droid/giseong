@@ -9,12 +9,13 @@ web.band.us 에 로그인된 브라저 세션(band_storage_state.json)을 재사
 
 세션 생성: python make_band_session.py (1회 수동 로그인)
 
-실제 밴드 글쓰기 흐름 (2026-05 기준, band_debug 로 확인):
+실제 밴드 글쓰기 흐름 (2026-05 기준, band_debug 로 검증):
   1. button._btnOpenWriteLayer        → 글쓰기 레이어 열기
   2. div.contentEditor._richEditor     → 본문 입력 (CKEditor)
   3. input[type=file] (첫 번째)        → 사진 선택
   4. "사진 올리기" 다이얼로그 → button[첨부하기] 클릭
   5. button._btnSubmitPost             → 게시
+  6. 글쓰기 레이어(본문 editor)가 사라지면 게시 완료
 
 UI 변경 시 config.yaml band.web_selectors_override 로 덮어쓴다.
 """
@@ -93,6 +94,9 @@ def post_via_web(
         )
         page = context.new_page()
         page.set_default_timeout(timeout_ms)
+        # 네이티브 확인창(confirm/alert)이 뜨면 자동으로 확인(accept).
+        # Playwright 기본값은 dismiss(취소)라 게시가 취소될 수 있어 방지.
+        page.on("dialog", lambda d: d.accept())
 
         try:
             page.goto(f"{BAND_WEB_BASE}/band/{band_id}")
@@ -126,28 +130,25 @@ def post_via_web(
             )
 
             # 4) "사진 올리기" 확인 다이얼로그 → [첨부하기] 클릭
-            #    (밴드는 파일 선택 후 별도 확인 창을 띄운다)
             try:
                 page.wait_for_selector(sels["confirm_photos"], timeout=15000)
-                # 썸네일 업로드 처리 대기 (장수에 비례, 최대 15초)
                 page.wait_for_timeout(min(2000 + 1000 * len(image_paths), 15000))
                 page.click(sels["confirm_photos"])
-                # 다이얼로그 닫힘 대기
                 page.wait_for_selector(
                     sels["confirm_photos"], state="hidden", timeout=20000
                 )
             except Exception:
-                # 확인 다이얼로그가 안 뜨는 경우도 허용
-                pass
+                pass  # 확인 다이얼로그가 안 뜨는 경우도 허용
 
-            page.wait_for_load_state("networkidle")
+            # 사진이 본문에 삽입될 시간 확보
+            page.wait_for_timeout(2000)
 
             # 5) 게시 (버튼이 활성화될 때까지 Playwright 가 자동 대기)
             page.click(sels["submit_button"])
 
-            # 6) 성공 판정: 글쓰기 레이어(게시 버튼)가 사라지면 완료
+            # 6) 성공 판정: 글쓰기 레이어(본문 editor)가 사라지면 게시 완료
             page.wait_for_selector(
-                sels["submit_button"], state="hidden", timeout=30000
+                sels["editor_textarea"], state="hidden", timeout=30000
             )
             page.wait_for_load_state("networkidle")
 
