@@ -1,0 +1,9 @@
+# 민감 정보 — 절대 커밋하지 말 것
+.env
+band_storage_state.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
