@@ -4,15 +4,21 @@ name: Auto Generate & Upload to Naver Band
 # 완전 자동화: 매일 정해진 시간에 카드뉴스를 생성하고
 # 검수 없이 곳바로 네이버 밴드에 게시 (Playwright 브라저 자동화)
 #
-# ⚠ 검수 게이트 없음: 생성된 내용이 사람 확인 없이 바로 발행됨
+# 지연/누락 대비: 각 슬롯마다 +4시간 보충(catch-up) 실행을 둔다.
+# 중복 방지: 게시 성공 시 state/<날짜>_<슬롯>.done 표시 파일을 커밋.
+#         보충 실행은 표시가 있으면 건너뛰고, 없을 때만 올린다.
 # ===========================================================
 
 on:
   schedule:
-    # 한국시간 08:30 = UTC 23:30 (전날) → AM 슬롯
+    # AM 기본 — 한국 08:30 (UTC 23:30, 전날)
     - cron: '30 23 * * *'
-    # 한국시간 18:00 = UTC 09:00 → PM 슬롯
+    # AM 보충 +4h — 한국 12:30 (UTC 03:30)
+    - cron: '30 3 * * *'
+    # PM 기본 — 한국 18:00 (UTC 09:00)
     - cron: '0 9 * * *'
+    # PM 보충 +4h — 한국 22:00 (UTC 13:00)
+    - cron: '0 13 * * *'
 
   workflow_dispatch:
     inputs:
@@ -25,7 +31,7 @@ on:
           - AM
           - PM
       topic:
-        description: '세부 주제 (비워두면 자동 회전)'
+        description: '세부 주제 (비워두면 날짜별 자동 순환)'
         required: false
         default: ''
       dry_run:
@@ -37,6 +43,10 @@ on:
           - 'false'
           - 'true'
 
+# state/ 표시 파일을 main 에 커밋하기 위해 쓰기 권한 필요
+permissions:
+  contents: write
+
 jobs:
   generate-and-upload:
     runs-on: ubuntu-latest
@@ -46,17 +56,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          python -m playwright install chromium --with-deps
-
       - name: Resolve run parameters
         id: params
         run: |
@@ -65,19 +64,47 @@ jobs:
             echo "topic=${{ github.event.inputs.topic }}" >> $GITHUB_OUTPUT
             echo "dry_run=${{ github.event.inputs.dry_run }}" >> $GITHUB_OUTPUT
           else
+            # 스케줄: UTC 시각으로 슬롯 판별 (23/03 → AM, 09/13 → PM)
             HOUR_UTC=$(date -u +%H)
-            if [ "$HOUR_UTC" = "23" ]; then
-              echo "slot=AM" >> $GITHUB_OUTPUT
-            else
-              echo "slot=PM" >> $GITHUB_OUTPUT
-            fi
+            case "$HOUR_UTC" in
+              23|03) echo "slot=AM" >> $GITHUB_OUTPUT ;;
+              09|13) echo "slot=PM" >> $GITHUB_OUTPUT ;;
+              *)     echo "slot=AM" >> $GITHUB_OUTPUT ;;
+            esac
             echo "topic=" >> $GITHUB_OUTPUT
             echo "dry_run=false" >> $GITHUB_OUTPUT
           fi
-          # KST 기준 오늘 날짜 (UTC+9)
+          # KST 기준 오늘 날짜 (기본/보충 실행이 같은 날짜를 공유 → 표시 파일 공유)
           echo "date=$(TZ=Asia/Seoul date +%Y-%m-%d)" >> $GITHUB_OUTPUT
 
+      - name: Check if already posted (schedule only)
+        id: skip
+        run: |
+          SKIP=false
+          FLAG="state/${{ steps.params.outputs.date }}_${{ steps.params.outputs.slot }}.done"
+          if [ "${{ github.event_name }}" = "schedule" ] && [ -f "$FLAG" ]; then
+            SKIP=true
+            echo "✓ 이미 게시 완료: ${{ steps.params.outputs.date }} ${{ steps.params.outputs.slot }} → 건너뜀"
+          else
+            echo "→ 게시 필요: ${{ steps.params.outputs.date }} ${{ steps.params.outputs.slot }}"
+          fi
+          echo "skip=$SKIP" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        if: steps.skip.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        if: steps.skip.outputs.skip != 'true'
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install chromium --with-deps
+
       - name: Generate today's card set
+        if: steps.skip.outputs.skip != 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BRAND_NAME: ${{ secrets.BRAND_NAME }}
@@ -89,33 +116,48 @@ jobs:
           eval python generate.py $ARGS
 
       - name: Restore Band login session
+        if: steps.skip.outputs.skip != 'true'
         env:
           BAND_STORAGE_STATE_JSON: ${{ secrets.BAND_STORAGE_STATE_JSON }}
         run: |
           if [ -z "$BAND_STORAGE_STATE_JSON" ]; then
-            echo "::error::secrets.BAND_STORAGE_STATE_JSON not set (README 5-1 참고)"
+            echo "::error::secrets.BAND_STORAGE_STATE_JSON not set"
             exit 1
           fi
           printf '%s' "$BAND_STORAGE_STATE_JSON" > band_storage_state.json
 
       - name: Upload to Band (no approval gate)
+        if: steps.skip.outputs.skip != 'true'
         env:
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
           BAND_ID: ${{ secrets.BAND_ID }}
           BAND_STORAGE_STATE: ./band_storage_state.json
         run: |
-          # --allow-draft: 검수 없이 draft 그대로 게시 (완전 자동화)
           ARGS="--slot ${{ steps.params.outputs.slot }} --date ${{ steps.params.outputs.date }} --allow-draft"
           if [ "${{ steps.params.outputs.dry_run }}" = "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
           python band_scheduler.py $ARGS
 
+      - name: Mark slot as posted
+        if: ${{ success() && steps.skip.outputs.skip != 'true' && steps.params.outputs.dry_run != 'true' }}
+        run: |
+          DATE="${{ steps.params.outputs.date }}"
+          SLOT="${{ steps.params.outputs.slot }}"
+          mkdir -p state
+          printf '{"date":"%s","slot":"%s","posted_at":"%s"}\n' \
+            "$DATE" "$SLOT" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "state/${DATE}_${SLOT}.done"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "state/${DATE}_${SLOT}.done"
+          git commit -m "chore: mark ${DATE} ${SLOT} posted [skip ci]" || echo "nothing to commit"
+          git push origin HEAD:main
+
       - name: Upload run logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: band-upload-logs-${{ steps.params.outputs.slot }}
+          name: band-upload-logs-${{ steps.params.outputs.slot }}-${{ github.run_id }}
           path: |
             logs/band/*.json
           if-no-files-found: ignore
