@@ -9,11 +9,12 @@ web.band.us 에 로그인된 브라저 세션(band_storage_state.json)을 재사
 
 세션 생성: python make_band_session.py (1회 수동 로그인)
 
-실제 밴드 글쓰기 흐름 (2026-05 기준, band_debug 로 검증):
+실제 밴드 글쓰기 흐름:
   1. button._btnOpenWriteLayer        → 글쓰기 레이어 열기
   2. div.contentEditor._richEditor     → 본문 입력 (CKEditor)
   3. input[type=file] (첫 번째)        → 사진 선택
   4. "사진 올리기" 다이얼로그 → button[첨부하기] 클릭
+  4b. 에디터 -loading 이 사라질 때까지(사진 업로드 완료) 대기
   5. button._btnSubmitPost             → 게시
   6. 글쓰기 레이어(본문 editor)가 사라지면 게시 완료
 
@@ -52,6 +53,14 @@ DEFAULT_WEB_SELECTORS = {
     # 게시 버튼
     "submit_button": "button._btnSubmitPost",
 }
+
+# 에디터 업로드 완료 감지용 JS (사진 처리 중이면 class에 -loading 이 붙음)
+_NOT_LOADING_JS = (
+    "() => {"
+    "  const e = document.querySelector('div.contentEditor._richEditor');"
+    "  return !!e && !String(e.className).includes('-loading');"
+    "}"
+)
 
 
 def post_via_web(
@@ -95,7 +104,6 @@ def post_via_web(
         page = context.new_page()
         page.set_default_timeout(timeout_ms)
         # 네이티브 확인창(confirm/alert)이 뜨면 자동으로 확인(accept).
-        # Playwright 기본값은 dismiss(취소)라 게시가 취소될 수 있어 방지.
         page.on("dialog", lambda d: d.accept())
 
         try:
@@ -140,15 +148,22 @@ def post_via_web(
             except Exception:
                 pass  # 확인 다이얼로그가 안 뜨는 경우도 허용
 
-            # 사진이 본문에 삽입될 시간 확보
-            page.wait_for_timeout(2000)
+            # 4b) 사진 업로드 처리 완료 대기 (에디터 -loading 이 사라질 때까지)
+            #    클라우드/헤드리스는 업로드가 느려 완료 전 게시하면 창이 안 닫힌다.
+            page.wait_for_timeout(3000)  # -loading 이 붙을 시간 확보
+            try:
+                page.wait_for_function(_NOT_LOADING_JS, timeout=90000)
+            except Exception:
+                pass
+            page.wait_for_load_state("networkidle")
+            page.wait_for_timeout(1500)
 
             # 5) 게시 (버튼이 활성화될 때까지 Playwright 가 자동 대기)
             page.click(sels["submit_button"])
 
             # 6) 성공 판정: 글쓰기 레이어(본문 editor)가 사라지면 게시 완료
             page.wait_for_selector(
-                sels["editor_textarea"], state="hidden", timeout=30000
+                sels["editor_textarea"], state="hidden", timeout=40000
             )
             page.wait_for_load_state("networkidle")
 
