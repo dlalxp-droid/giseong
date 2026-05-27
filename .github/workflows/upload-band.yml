@@ -7,6 +7,7 @@ name: Auto Generate & Upload to Naver Band
 # 지연/누락 대비: 각 슬롯마다 +4시간 보충(catch-up) 실행을 둔다.
 # 중복 방지: 게시 성공 시 state/<날짜>_<슬롯>.done 표시 파일을 커밋.
 #         보충 실행은 표시가 있으면 건너뛰고, 없을 때만 올린다.
+# 슬롯 판별: 트리거된 cron 식(github.event.schedule)으로 결정 — 실행 지연과 무관.
 # ===========================================================
 
 on:
@@ -64,12 +65,11 @@ jobs:
             echo "topic=${{ github.event.inputs.topic }}" >> $GITHUB_OUTPUT
             echo "dry_run=${{ github.event.inputs.dry_run }}" >> $GITHUB_OUTPUT
           else
-            # 스케줄: UTC 시각으로 슬롯 판별 (23/03 → AM, 09/13 → PM)
-            HOUR_UTC=$(date -u +%H)
-            case "$HOUR_UTC" in
-              23|03) echo "slot=AM" >> $GITHUB_OUTPUT ;;
-              09|13) echo "slot=PM" >> $GITHUB_OUTPUT ;;
-              *)     echo "slot=AM" >> $GITHUB_OUTPUT ;;
+            # 스케줄: 트리거된 cron 식으로 슬롯 판별 (실행 지연과 무관)
+            case "${{ github.event.schedule }}" in
+              "30 23 * * *"|"30 3 * * *") echo "slot=AM" >> $GITHUB_OUTPUT ;;
+              "0 9 * * *"|"0 13 * * *")   echo "slot=PM" >> $GITHUB_OUTPUT ;;
+              *)                          echo "slot=AM" >> $GITHUB_OUTPUT ;;
             esac
             echo "topic=" >> $GITHUB_OUTPUT
             echo "dry_run=false" >> $GITHUB_OUTPUT
