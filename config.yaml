@@ -13,20 +13,25 @@ design:
     gold:  "#C8A14B"
     red:   "#B8321A"
 
-# ----- 콘텐츠 (정보형, 4주제 순환) -----
+# ----- 콘텐츠 (정보형, 8주제 일일 순환) -----
 content:
-  # 날짜별로 순환하는 4개 대주제 (generate.py THEME_POOL 와 동일)
+  # 8개 대주제 — generate.py의 THEME_POOL과 동일 (참고용)
   theme_pool:
     - "보험 정보"
     - "건강 정보"
     - "생활 정보"
     - "금융 정보"
-  target: "일반 밴드 구독자 (보험·생활 정보에 관심 있는 일반인)"
+    - "노후·은퇴 정보"
+    - "부동산·주택 정보"
+    - "자녀·가족 정보"
+    - "자기계발 정보"
+  # 주제별 세부주제 풀은 generate.py SUBTOPIC_POOL 참조 (각 15개)
+  # → 8 × 15 × 2(AM/PM 오프셋) = 약 240가지 조합
+  target: "일반 밴드 구독자"
   tone: "쉽고 유익하게, 과장·단정 없이 검증된 일반 정보 중심"
-  # 가짜뉴스 방지 가드레일 (시스템 프롬프트에도 반영됨)
   guardrails:
-    - "실시간 뉴스/속보 금지 ('이번주', 특정 날짜, 최신 사건 단정 X)"
-    - "특정 회사·상품·금융 종목·병원·약품 이름 언급 금지"
+    - "실시간 뉴스/속보 금지"
+    - "특정 회사·상품·종목·병원·약품 이름 언급 금지"
     - "의료 진단/처방, 투자 권유, 법률 단정 금지"
     - "검증되지 않은 통계·수치 날조 금지"
   structure:
@@ -39,7 +44,7 @@ content:
 
 # ----- 사인오프 -----
 branding:
-  sign_off: "@bobobun"   # 본인 브랜드명 (BRAND_NAME 환경변수가 있으면 그걸 우선)
+  sign_off: "@bobobun"
   swipe_cta: "다음 ➜"
 
 # ----- 슬롯 (자동 업로드 시간) -----
@@ -50,9 +55,9 @@ slots:
 # ----- LLM (콘텐츠 생성) -----
 llm:
   provider: "anthropic"
-  model: "claude-sonnet-4-6"   # 최신 Sonnet (API 유효 모델 ID)
+  model: "claude-sonnet-4-6"
   max_tokens: 4000
-  temperature: 0.7
+  temperature: 0.8
 
 # ----- Playwright 렌더링 -----
 render:
