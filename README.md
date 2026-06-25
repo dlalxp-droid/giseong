@@ -1,258 +1,108 @@
-# 보험 상담 화법 카드뉴스 자동화 시스템
+# 네이버 밴드 자동 카드뉴스 시스템
 
-카드뉴스(1080x1080, 8장/세트)를 Claude API로 자동 생성하고,
-지정된 시간(매일 08:30 / 18:00)에 **인스타그램(Meta Graph API) + 네이버 밴드(Playwright)**
-양쪽으로 자동 업로드하는 시스템.
+매일 정해진 시각에 정보 카드뉴스(8장)를 자동으로 만들고 네이버 밴드에 게시하는 프로그램.
+Claude AI로 콘텐츠 생성 + Playwright 브라우저 자동화로 밴드에 직접 업로드.
 
-타겟: 보험설계사. 콘텐츠: 보험 상담 화법 (보상 관련 주제는 자동 회피).
+## 특징
 
-> 네이버 밴드는 Open API 앱 등록이 어려워 **API를 사용하지 않고**, 저장된 로그인
-> 세션으로 Playwright 브라우저 자동화를 통해 밴드 웹사이트에 직접 글을 작성한다.
+- ✅ **매일 2회 자동 게시** (오전 08:30 / 오후 18:00, 한국시간)
+- ✅ **8주제 일일 순환**: 보험 → 건강 → 생활 → 금융 → 노후·은퇴 → 부동산·주택 → 자녀·가족 → 자기계발
+- ✅ **세부주제 15개×8 = 120개 풀** + AM/PM 오프셋 → 약 240가지 조합
+- ✅ **가짜뉴스 방지 가드레일** (속보/수치 날조/특정종목 언급 금지)
+- ✅ **클라우드 자동 실행** (GitHub Actions) — 내 PC 껌져 있어도 돌아감
+- ✅ **누락 시 보충 실행** (+4시간 재시도, 중복 방지 내장)
+- ✅ **세션 갱신 더블클릭** (refresh_session.bat) — 몇 주에 한 번 갱신
 
----
+## 자동화 흐름
 
-## 1. 디렉토리 구조
+```
+  GitHub Actions Cron 스케줄
+              ↓
+  Claude API 로 카드 8장 + 캸션 생성
+              ↓
+  Playwright로 1080×1080 PNG 렌더링
+              ↓
+  Playwright로 밴드 글쓰기 → 사진 8장 첨부 → 게시
+              ↓
+  state/<날짜>_<슬롯>.done 표시 기록
+```
+
+## 빠른 시작
+
+👉 [SETUP.md](SETUP.md) 를 차례대로 따라하세요. 소요 시간 30~45분.
+
+## 주요 파일 구조
 
 ```
 .
-├── generate.py              # 카드뉴스 일괄 생성 진입점
-├── scheduler.py             # 인스타 업로드 진입점 (cron)
-├── band_scheduler.py        # 네이버 밴드 업로드 진입점 (cron, Playwright)
-├── config.yaml              # 디자인/콘텐츠/슬롯/플랫폼 설정
-├── .env.example             # 환경변수 템플릿
-├── requirements.txt
+├── generate.py              # 카드세트 생성 (Claude API + 렌더링)
+├── band_scheduler.py        # 밴드 업로드 진입점
+├── make_band_session.py     # 세션 생성 (최초 1회 로그인)
+├── refresh_session.bat      # 세션 갱신 원클릭 스크립트 (더블클릭)
+├── config.yaml              # 디자인/콘텐츠/슬롯 설정
+├── requirements.txt         # Python 의존성
 ├── templates/
-│   └── card.html            # 1080x1080 단일 템플릿 (카드 type별 분기)
+│   └── card.html            # 1080×1080 카드 HTML 템플릿
 ├── scripts/
-│   ├── content_generator.py # Claude API 호출 → 8장 분량 JSON
-│   ├── renderer.py          # HTML → Playwright → PNG
-│   ├── image_host.py        # Cloudinary 업로드 (Meta는 public URL 요구)
-│   ├── ig_uploader.py       # Meta Graph API 캐러셀 게시
-│   └── band_uploader.py     # 네이버 밴드 게시 (Playwright 웹 자동화)
-├── input/                   # 사용자 자료 (PDF 등) drop
-├── output/                  # 생성물 (draft → approved 게이트)
-├── captions/                # YYYY-MM-DD_AM.txt, _PM.txt
-└── logs/
-    ├── YYYY-MM-DD_SLOT.json # 인스타 업로드 결과
-    └── band/                # 밴드 업로드 결과
+│   ├── content_generator.py # Claude API 프롬프트 + JSON 스키마
+│   ├── renderer.py          # HTML → PNG 렌더
+│   └── band_uploader.py     # Playwright 밴드 업로드
+├── .github/workflows/
+│   └── upload-band.yml      # 매일 자동 실행 (클라우드)
+├── state/                   # 게시 완료 표시 파일 (자동 기록)
+└── output/                  # 생성된 카드 PNG (날짜별)
 ```
 
----
+## 매일 운영
 
-## 2. 설치
+설치 끝나면 평소엔 손 대질 일 거의 없습니다:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python -m playwright install chromium
+- **자동** — 매일 08:30 / 18:00 자동 게시
+- **확인** — 한 달에 한두 번 Actions 탭에서 성공/실패 확인
+- **갱신** — 몇 주에 한번 `refresh_session.bat` 더블클릭으로 세션 갱신
+  (클라우드 IP에서 밴드 세션이 주기적으로 풌리기 때문)
 
-cp .env.example .env
-# .env 파일을 열어 토큰/키 채우기
+## 주제·콘텐츠 커스터마이징
+
+### 주제 목록 변경
+`generate.py` 의 `THEME_POOL` 편집:
+```python
+THEME_POOL = [
+    "보험 정보", "건강 정보", ...
+]
 ```
 
----
+### 세부주제 변경 / 추가
+`generate.py` 의 `SUBTOPIC_POOL` 딕셔너리 편집. 각 대주제마다 리스트로 자유롭게 추가/제거.
 
-## 3. Meta Graph API 토큰 발급 (인스타용)
+### 시스템 프롬프트 / 가드레일
+`scripts/content_generator.py` 의 `SYSTEM_PROMPT` 수정.
 
-지시서 2-1번 참고. 핵심만:
+### 카드 디자인 (색상/레이아웃)
+`templates/card.html` 내 CSS 수정. 컬러 변수 `--navy`, `--cream`, `--gold`, `--red`.
 
-1. 인스타그램 **프로페셔널** 계정 + 페이스북 페이지 연동
-2. https://developers.facebook.com → 앱 생성 → "비즈니스"
-3. 제품: Instagram Graph API
-4. 권한: `instagram_basic`, `instagram_content_publish`, `pages_show_list`, `pages_read_engagement`
-5. 단기 토큰 → 장기 토큰(60일)으로 교환
-6. `.env`:
-   ```
-   META_ACCESS_TOKEN=EAAxxxxxxx...
-   IG_USER_ID=17841400000000000
-   ```
+### 게시 시간
+`.github/workflows/upload-band.yml` 의 `cron:` 수정 (UTC 기준).
 
----
+## 기술 스택
 
-## 4. 이미지 호스팅 (Cloudinary, 인스타용)
+- Python 3.11+
+- Anthropic Claude API (`anthropic`)
+- Playwright (Chromium 자동화)
+- PyYAML (설정)
+- GitHub Actions (스케줄링)
 
-Meta API는 **public URL** 만 받기 때문에 PNG를 외부에 올려야 함.
-(밴드는 사진을 직접 첨부하므로 호스팅이 필요 없다.)
+## 시스템 한계 / 주의점
 
-1. https://cloudinary.com/users/register/free
-2. `.env` 에 `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- **클라우드 세션 만료**: GitHub IP에서 밴드 세션이 주기적으로 풌립니다 (보통 몇 주). `refresh_session.bat` 으로 갱신 필요.
+- **GitHub cron 지연**: 무료 예약 실행은 정시 보장 안 됨 (수십 분 늦거나 끊기기도). 보충 +4시간 수시로 완화.
+- **가짜뉴스 위험**: AI는 실시간 뉴스를 모릅니다. 시스템 프롬프트에서 "속보/수치날조/특정종목 금지"로 제한되어 있지만 검수로 검증하면 더 안전. 검수 게이트를 켜려면 `band_scheduler.py --allow-draft` 옵션 제거.
+- **API 비용**: Claude API는 사용량대로 과금. 세트당 약 수십원 수준 (Sonnet 기준).
 
----
+## 라이선스 / 고지
 
-## 5. 네이버 밴드 자동 업로드 (Playwright 웹 자동화)
+- Personal use 기준 제작됨.
+- 밴드 차용서 자동화는 네이버 밴드의 ToS 범위 내에서만 사용하세요. 과도한 호출·스팸성 게시 금지.
+- Claude API·밴드·GitHub 이용약관을 본인이 확인하고 준수하세요.
 
-밴드 Open API는 사진 첨부 게시 엔드포인트가 없고 앱 등록 승인도 까다로워
-**API를 전혀 사용하지 않는다**. 대신 로컬에서 한 번 로그인한 세션을
-`band_storage_state.json` 으로 저장해 두고, Playwright 가 그 세션으로
-band.us 에 접속해 글쓰기 → 사진 8장 첨부 → 게시를 자동 수행한다.
-
-### 5-1. 로그인 세션(storage_state) 만들기 (최초 1회)
-
-밴드 로그인은 캡차/2단계가 있어 헤드리스 자동 로그인은 권장하지 않는다.
-**보이는 브라우저에서 직접 로그인**한 뒤 쿠키를 저장한다.
-
-```bash
-python - <<'PY'
-from playwright.sync_api import sync_playwright
-with sync_playwright() as pw:
-    b = pw.chromium.launch(headless=False)
-    ctx = b.new_context(locale="ko-KR")
-    page = ctx.new_page()
-    page.goto("https://auth.band.us/login_page")
-    input("브라우저에서 로그인 완료 후 이 터미널에서 Enter…")
-    ctx.storage_state(path="band_storage_state.json")
-    b.close()
-PY
-```
-
-`.env`:
-```
-BAND_ID=12345678                       # https://band.us/band/<여기>
-BAND_STORAGE_STATE=./band_storage_state.json
-```
-
-> 세션 만료(보통 수주 ~ 수개월) 시 위 스크립트로 다시 만들면 됨.
-> 만료되면 band_scheduler 가 "로그인 세션 만료" 에러로 즉시 알려준다.
-
-### 5-2. 즉시 게시 테스트
-
-```bash
-# 자료 점검만 (브라우저/게시 X)
-python band_scheduler.py --slot AM --dry-run
-
-# 실제 게시 (헤드리스)
-python band_scheduler.py --slot AM
-
-# 디버그: 브라우저 창을 띄워 동작 확인
-python band_scheduler.py --slot AM --no-headless
-```
-
-단일 게시(스케줄러 우회)도 가능:
-
-```bash
-python scripts/band_uploader.py \
-  --caption-file captions/2026-05-04_AM.txt \
-  --images output/2026-05-04/AM/approved/card_01.png,output/2026-05-04/AM/approved/card_02.png \
-  --no-headless
-```
-
-### 5-3. cron 등록
-
-```cron
-# 인스타 + 밴드 동시 게시
-30 8  * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot AM
-30 8  * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot AM
-0  18 * * *  cd /path && /path/.venv/bin/python scheduler.py       --slot PM
-0  18 * * *  cd /path && /path/.venv/bin/python band_scheduler.py  --slot PM
-```
-
-### 5-4. GitHub Actions
-
-`.github/workflows/upload-band.yml` 에 정기 워크플로우 포함.
-저장소 secrets:
-- `BAND_ID` — band.us URL의 band id
-- `BAND_STORAGE_STATE_JSON` — 로컬에서 만든 `band_storage_state.json` 파일
-  **내용 전체**를 secret value 로 붙여넣음 (워크플로우가 파일로 복원)
-- `NOTIFY_WEBHOOK_URL` (선택) — 실패 알림 웹훅
-
-> 클라우드 러너의 IP/환경이 평소와 다르면 밴드가 재인증을 요구할 수 있다.
-> 세션이 자주 풀리면 로컬 cron 운영을 권장.
-
-### 5-5. 밴드 UI 변경 대응
-
-band.us 의 HTML 구조가 바뀌면 글쓰기 자동화가 실패할 수 있다.
-셀렉터는 `config.yaml` 의 `band.web_selectors_override` 에서 덮어쓴다:
-
-```yaml
-band:
-  web_selectors_override:
-    open_composer: "button.새_글쓰기_버튼"
-    editor_textarea: "div[contenteditable='true']"
-    photo_input: "input[type='file'][accept*='image']"
-    submit_button: "button.새_게시_버튼"
-    success_toast: ".toast-message"
-```
-
-기본 셀렉터는 `scripts/band_uploader.py` 의 `DEFAULT_WEB_SELECTORS` 참고.
-
----
-
-## 6. 일일 운영 흐름
-
-### 6-1. 일주일치 일괄 생성
-
-```bash
-python generate.py --days 7 --slots AM,PM
-```
-
-### 6-2. 검수 → approved 이동
-
-```bash
-mv output/2026-05-04/AM/draft/*.png output/2026-05-04/AM/approved/
-```
-
-> approved/ 에 들어간 것만 자동 업로드 큐 대상 (지시서 6번).
-
-### 6-3. 즉시 테스트
-
-```bash
-python generate.py --preview --stub
-python scheduler.py      --slot AM --dry-run
-python band_scheduler.py --slot AM --dry-run
-```
-
----
-
-## 7. 카드 구조 (지시서 1-2)
-
-```
-01 cover    표지 (강한 후킹)
-02 problem  문제 상황
-03 mistake  흔한 실수 멘트
-04 before   기존 화법
-05 after    권장 화법 (강조 멘트)
-06 theory   심리학 근거 (카네기/아들러/치알디니 등)
-07 summary  한 줄 요약
-08 cta      저장·공유 유도 + 다음 예고
-```
-
-콘텐츠 톤:
-- 추상론 금지. 실제 멘트 대본 형태
-- Before/After는 따옴표로 묶인 직접 멘트
-- 심리학 인용은 12자 이내 (저작권)
-- 보상·약관·의료자문 주제는 system prompt에서 자동 차단
-
----
-
-## 8. 자주 보는 에러
-
-| 에러 | 원인 / 해결 |
-|---|---|
-| `Container ... not ready in 60s` | 이미지 URL public 아님 / 호스팅 지연 (인스타) |
-| `(#10) Application does not have permission` | Meta 앱 검수 미완료 또는 권한 누락 |
-| `Carousel must have 2~10 items` | PNG 개수 불일치 |
-| 토큰 만료 (Meta) | 60일 만료. Graph API Explorer 재발급 |
-| `로그인 세션 만료` (밴드) | 5-1 절차로 `band_storage_state.json` 재생성 |
-| Band selector 실패 / Timeout | 밴드 UI 개편. 5-5 `band.web_selectors_override` 로 셀렉터 교정 |
-| `로그인 세션 파일 없음` | `BAND_STORAGE_STATE` 경로 확인, 5-1 절차로 생성 |
-
----
-
-## 9. 안전장치
-
-- 보상 주제 자동 회피 (system prompt 차단)
-- draft → approved 수동 게이트 (사람이 본 것만 게시)
-- 재시도 3회 (네트워크/일시 장애 대응)
-- 플랫폼별 분리 로그: `logs/*.json` (인스타) / `logs/band/*.json` (밴드)
-- 알림 웹훅(선택): 실패 시 슬랙/디스코드로 통보
-
----
-
-## 10. 다음 확장 (TODO)
-
-- [ ] PDF/Google Drive 자료 입력 반영
-- [ ] 주간 주제 커버리지 대시보드
-- [ ] Pretendard 폰트 임베드
-- [ ] Reels 분리 발행 (media_type=REELS)
-- [ ] 카카오톡 채널 / 네이버 카페 어댑터 추가
+## 자주 보는 문제 → [SETUP.md 하단 문제해결 섹션](SETUP.md#9-문제-해결)
